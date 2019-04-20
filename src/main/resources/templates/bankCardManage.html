@@ -1,0 +1,125 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" th:src="@{/webjars/jquery/3.3.1-2/jquery.js}"></script>
+<link rel="stylesheet" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}">
+<script type="text/javascript" th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/scripts/bankCard.css}">
+<title>银行卡管理</title>
+<style type="text/css">
+#container{
+  border:2px solid #EEEEEE;
+  width:1300px;
+ /*  height:700px; */
+  margin-left:250px;
+  margin-top:2px;
+  background-color:#F7F7F7;
+ }
+ .active{
+ background-color:#DDDDDD;
+ }
+.tt{
+ color:red;
+}
+#dd2{
+  border:2px solid #EEEEEE;
+  width:560px;
+  height:380px;
+  margin-left:460px;
+  margin-top:50px;
+  position:absolute;
+  background-color:#FFFFFF;
+  display:none;
+}
+ 
+</style>
+</head>
+<body>
+ <div th:include="header :: common"></div>
+ <div th:include="header :: nav"></div>
+ <input type="hidden" id="pwd" th:value="${pay}">
+ <div id="container">
+    <div id="ee">
+           <ul th:each="c:${cards}">             
+             <li>                        
+			  <div class="dd" th:onclick="'javascript:choice('+${c.id}+','+${c.userid}+','+${c.bankCard.timequota}+','+${c.bankCard.dayquota}+')'">
+			    <div class="dd3">
+			       <p class="letter"> 
+			       <img th:src="${c.bankCard.logo}" class="image-circle" />&nbsp;<span id="span1" th:text="${c.bankCard.bankname}"></span><span id="span2">(储蓄卡)</span><br>
+			       <span>卡号：**** ****</span><span th:text="${#strings.substring(c.cardid,c.cardid.length()-4,c.cardid.length())}"></span><br>
+			       <span>等级：*</span> 
+			       </p>                           
+			    </div>
+			   </div>
+		  </li>
+	   </ul>
+	  <p id="add"><a href="javascript:pwd()">+添加银行卡</a></p>
+     </div>	
+	  <div id="dd2" class="row navs" >
+	    <p class="pp">本卡关联资产余额：  <span id="rea">&nbsp;</span>元</p>
+	    <p class="pp">充值限额：单笔<span id="time">0.00</span>元，单日<span id="day">0.00</span>元</p>
+	    <p class="pp2" >
+	  <!--   <span><input class="but" id="change" type="button" value="换卡"/></span>&emsp;&emsp; -->
+	    <span><input class="but" id="del" type="button" value="删除该卡"/></span>
+	    </p>
+	  </div>
+	  <!--提示语句  -->
+	  <input id="msg" type="hidden" th:value="${msg}">
+</div>   
+<div th:include="footer :: common"></div>
+</body>
+<script>
+$(function(){
+	$(".dd").mouseenter(function(){
+		$(this).addClass("active");
+		$(".dd").not($(this)).removeClass("active");
+	})
+	var msg = $("#msg").val();
+	if(msg==null){
+		$("#msg").hide();
+	}else if(msg=="succeed"){
+		alert("删除成功！")
+	}else if(msg=="fail"){
+		alert("删除失败")
+	}else if(msg=="undone"){
+		alert("该卡有关联资金无法删除!")
+	}else if(msg=="sur"){
+		alert("该卡有资产余额绑定无法删除!")
+	}
+})
+
+function choice(id,userid,time,day){
+	$("#time").html(time);
+	$("#day").html(day);
+	$("#dd2").show();
+	$.ajax({
+		   dataType:"json",
+		   type: "post",
+		   url: "/customer/bank/cardsValue.do",
+		   data: {"id":id,"userid":userid},
+		   success:function(data){
+			   $("#rea").html(data);			   
+		   }			   
+	})	
+	
+			
+	$("#del").off('click').on('click',function(){
+	     
+		if(confirm("确定要删除吗？")){
+			location.href="/customer/bank/delCard.do?id="+id+"&userid="+userid;
+		}
+	});		 			   
+}
+
+function pwd(){
+	var pay = $("#pwd").val();
+	if(pay==0){
+		location.href="/customer/security/toSetTransCode.do";
+	}else{
+		location.href="/customer/bank/toAdd.do";
+	}
+}
+</script>
+</html>

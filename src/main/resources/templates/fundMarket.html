@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet"
+	href="/customer/webjars/bootstrap/4.3.1/css/bootstrap.css">
+<link rel="stylesheet"
+	href="/customer/webjars/bootstrap/4.3.1/css/bootstrap.min.css">
+<script type="text/javascript"
+	src="/customer/webjars/jquery/3.3.1-2/jquery.js"></script>
+<script type="text/javascript"
+	src="/customer/webjars/jquery/3.3.1-2/jquery.min.js"></script>
+<script type="text/javascript"
+	src="/customer/webjars/bootstrap/4.3.1/js/bootstrap.js"></script>
+<script type="text/javascript"
+	src="/customer/webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<style>
+#a:hover {
+	color: white
+}
+</style>
+<script type="text/javascript">
+	$(function() {
+		$(".toFund").click(function() {
+			location.href = "/customer/fundMarket?id=" + $(this).val();
+		})
+
+		$(".buy").click(
+				function() {
+					location.href = "/customer/purchase/toPurchase?id="
+							+ $(this).val();
+				})
+
+		$(".timeBuy")
+				.click(
+						function() {
+							location.href = "/customer/purchaseTiming/toPurchaseTiming?id="
+									+ $(this).val();
+						})
+
+		$(".dud").each(function() {
+			if ($(this).val() != null) {
+				if ($(this).html().substring(0, 1) != "-") {
+					$(this).css("color", "orange");
+				} else {
+					$(this).css("color", "green");
+				}
+			}
+		})
+		$(".tud").each(function() {
+			if ($(this).val() != null) {
+				if ($(this).html().substring(0, 1) != "-") {
+					$(this).css("color", "orange");
+				} else {
+					$(this).css("color", "green");
+				}
+			}
+		})
+
+	})
+</script>
+</head>
+<body>
+	<div th:insert="header::common"></div>
+	<div class="container">
+		<div class="row">
+			<div class="col-sm" th:each="fl:${ftList}">
+				<button type="button" class="btn btn-info toFund"
+					th:text="${fl.fundtypename}" th:value="${fl.id}"></button>
+			</div>
+		</div>
+		<p></p>
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">产品名称</th>
+					<th scope="col">净值日期</th>
+					<th scope="col">日涨跌幅</th>
+					<th scope="col">累计涨跌幅</th>
+					<th scope="col">管理费率</th>
+					<th scope="col">投资起点</th>
+					<th scope="col" colspan="2">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="funds:${fundList}">
+					<th scope="row"><a th:href="@{/toDetails/}+${funds.id}"
+						th:text="${funds.fundname}"></a></th>
+					<td th:text="${#dates.format(funds.unitvaluedate,'yyyy-MM-dd')}"></td>
+					<td th:text="${funds.dayupdown}+'%'" class="dud"></td>
+					<td th:text="${funds.totalupdown}+'%'" class="tud"></td>
+					<td th:text="${funds.managerate}+'%'"></td>
+					<td th:text="${funds.startpoint}+'元'"></td>
+					<td><button type="button" class="btn btn-warning buy"
+							th:value="${funds.id}">购买</button></td>
+					<td><button type="button"
+							class="btn btn-outline-warning timeBuy" th:value="${funds.id}"
+							style="margin-left: -30px">定投</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div th:insert="footer::common"></div>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>交易记录</title>
+<link rel="stylesheet" href="/customer/webjars/bootstrap/4.3.1/css/bootstrap.css">
+<script type="text/javascript" src="/customer/webjars/jquery/3.3.1-2/jquery.js"></script>
+<style>
+	#body{
+		height:900px;
+		width:100%;
+		margin-top:1%;
+		padding-left:12%;
+		text-align:center;
+	}
+	#bodyleft{
+		float:left;
+	}
+	#bodyright{
+		float:left;
+		margin-right:80px;
+		margin-left:20px;
+		width:810px;
+	}
+	#leftmsg{
+		border:1px solid #DCDCDC;
+		height:200px;
+		padding-top:30px;
+		background-color: 	#FFA500;
+		width:250px;
+	}
+	#righttop{
+		border:1px solid #DCDCDC;
+		margin-bottom: 20px;
+		height:200px;
+	}
+	tr{
+		height:35px;
+		line-height: 35px;
+	}
+	#grjjgl{
+		background-color: darkorange;
+	}
+	#righttop div{
+		margin:25px 30px;
+		text-align: left;
+		font-weight: bold;
+	}
+	.op1 li{
+		float: left;
+		margin-left:30px;
+		font-weight: 100;
+		cursor: pointer;
+		width:75px;
+		text-align: center;
+		border-radius: 15px;
+	}
+	.op2 li{
+		float: left;
+		margin-left:30px;
+		font-weight: 100;
+		cursor: pointer;
+		width:75px;
+		text-align: center;
+		border-radius: 15px;
+	}
+	.op3 li{
+		float: left;
+		margin-left:30px;
+		font-weight: 100;
+		cursor: pointer;
+		width:75px;
+		text-align: center;
+		border-radius: 15px;
+	}
+	.cc{
+		background-color:#FFA500;
+		color:white;
+	}
+	.green{
+		color:#00EE00;
+	}
+	.red{
+		color:red;
+	}
+	.yellow{
+		color:yellow;
+	}
+	.bule{
+		color:blue;
+	}
+	
+</style>
+</head>
+<body>
+	<div th:include="header :: common"></div>
+	<div th:include="header :: nav"></div>
+	<div id="body">
+		<div id="bodyleft">
+			<div id="leftmsg">
+				<img th:src="@{/images/am_img.jpg}" style="border-radius: 50%">
+				<p style="font-size: 25px;color:white;font-family:'黑体'" th:text="${session.loginUser.realName}!=null?'您好，'+${session.loginUser.realName}:'您好'">您好，xx</p>
+			</div>
+			<div class="list-group" style="width:250px">
+				<a href="/customer/personalFund/toPersonal.do" class="list-group-item list-group-item-action">我的资产</a>
+				<a href="/customer/personalFund/toTrade.do" class="list-group-item list-group-item-action" style="background:#FFE7BA">交易记录</a>
+				<a href="/customer/personalFund/toInvest.do" class="list-group-item list-group-item-action">我的定投</a>
+				<a href="/customer/personalFund/toOnWay.do" class="list-group-item list-group-item-action">在途交易</a>
+			</div>
+		</div>
+		<div id="bodyright">
+			<form id="opForm" action="/customer/personalFund/toTrade.do" method="POST">
+				<input id="queryTradeDate" name="queryTradeDate" type="hidden" th:value="${query.queryTradeDate}" >
+				<input id="queryTradeType" name="queryTradeType" type="hidden" th:value="${query.queryTradeType}">
+				<input id="queryTradeState" name="queryTradeState" type="hidden" th:value="${query.queryTradeState}">
+				<div style="display:none"><input id="tijiao" type="submit"></div>
+			</form>
+			<div id="righttop">
+				<div>交易时间：
+					<ul class="op1">
+						<li>全部</li>
+						<li>7天内</li>
+						<li>1个月内</li>
+						<li>3个月内</li>
+					</ul>
+				</div>
+				<div>交易类型：
+					<ul class="op2">
+						<li>所有类型</li>
+						<li>购买</li>
+						<li>赎回</li>
+						<li>定投</li>
+					</ul>
+				</div>
+				<div>交易状态：
+					<ul class="op3">
+						<li>所有状态</li>
+						<li>成功</li>
+						<li>失败</li>
+						<li>待审核</li>
+						<li>不通过</li>
+					</ul>
+				</div>
+			</div>
+			<input type="hidden" th:value="${size}" id="size">
+			<p id="tips"></p>
+			<div id="rightdown">
+				<table class="table table-striped" style="border:1px solid #eee">
+					<thead>
+						<tr>
+							<td>订单号</td>
+							<td>交易时间</td>
+							<td>产品名称</td>
+							<td>交易类型</td>
+							<td>份额</td>
+							<td>管理费</td>
+							<td>交易状态</td>
+						</tr>
+					</thead>
+					<tr th:each="trade:${pageInfo.list}">
+						<td th:text="${trade.orderid}"></td>
+						<td th:text="${#dates.format(trade.orderdate,'yyyy-MM-dd')}"></td>
+						<td th:text="${trade.fund.fundname}"></td>
+						<td th:text="${trade.tradetype.typename}"></td>
+						<td th:text="${trade.portion}"></td>
+						<td th:text="${trade.fund.managerate*100}+'%'"></td>
+						<td th:text="${trade.tradestate.statename}" class="turn"></td>
+					</tr>
+				</table>
+				<p>共 [[${pageInfo.total}]]条记录 &nbsp;&nbsp; 当前第[[${pageInfo.pageNum}]]页&nbsp;&nbsp;共[[${pageInfo.pages}]]页</p>
+				<div>
+					<ul class="pagination" th:if="${pageInfo.total!=0}" style="margin-left:35%">
+						<li style="margin:10px"><a th:href="@{toTrade.do(pageNum=1,queryTradeDate=${query.queryTradeDate},queryTradeType=${query.queryTradeType},queryTradeState=${query.queryTradeState})}">首页</a></li>
+						<li style="margin:10px" th:if="${pageInfo.pageNum==1}" th:class="disabled"><a>上一页</a></li>
+						<li style="margin:10px" th:if="${pageInfo.pageNum>1}"><a th:href="@{toTrade.do(pageNum=${pageInfo.pageNum-1},queryTradeDate=${query.queryTradeDate},queryTradeType=${query.queryTradeType},queryTradeState=${query.queryTradeState})}">上一页</a></li>
+						<li style="margin:10px" th:if="${pageInfo.pageNum==pageInfo.pages}" th:class="disabled"><a>下一页</a></li>
+						<li style="margin:10px" th:if="${pageInfo.pageNum!=pageInfo.pages}"><a th:href="@{toTrade.do(pageNum=${pageInfo.pageNum+1},queryTradeDate=${query.queryTradeDate},queryTradeType=${query.queryTradeType},queryTradeState=${query.queryTradeState})}">下一页</a></li>
+						<li style="margin:10px"><a th:href="@{toTrade.do(pageNum=${pageInfo.pages},queryTradeDate=${query.queryTradeDate},queryTradeType=${query.queryTradeType},queryTradeState=${query.queryTradeState})}">尾页</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:include="footer :: common"></div>
+</body>
+</html>
+<script type="text/javascript">
+// 		$('ul li').click(function(){
+// 			$(this).addClass("cc");
+// 			$(this).siblings().removeClass("cc");
+// 		})
+		$('.op1,.op2,.op3').children().click(function(){
+			var op = $(this).text();
+			if(op=='全部'){
+				$("#queryTradeDate").val('');
+			}if(op=='7天内'){
+				$("#queryTradeDate").val('1');
+			}if(op=='1个月内'){
+				$("#queryTradeDate").val('2');
+			}if(op=='3个月内'){
+				$("#queryTradeDate").val('3');
+			}if(op=='所有类型'){
+				$("#queryTradeType").val('');
+			}if(op=='购买'){
+				$("#queryTradeType").val('1');
+			}if(op=='赎回'){
+				$("#queryTradeType").val('2');
+			}if(op=='定投'){
+				$("#queryTradeType").val('3');
+			}if(op=='所有状态'){
+				$("#queryTradeState").val('');
+			}if(op=='成功'){
+				$("#queryTradeState").val('1');
+			}if(op=='失败'){
+				$("#queryTradeState").val('2');
+			}if(op=='待审核'){
+				$("#queryTradeState").val('4');
+			}if(op=='不通过'){
+				$("#queryTradeState").val('3');
+			}
+			$("#tijiao").click();
+		})
+		$(function(){
+			var qdate = $("#queryTradeDate").val();
+			var qtype = $("#queryTradeType").val();
+			var qstate = $("#queryTradeState").val();
+			if(qdate==''){
+				$(".op1 li:nth-child(1)").addClass("cc");
+				$(".op1 li:nth-child(1)").siblings().removeClass("cc");
+			}if(qdate=='1'){
+				$(".op1 li:nth-child(2)").addClass("cc");
+				$(".op1 li:nth-child(2)").siblings().removeClass("cc");
+			}if(qdate=='2'){
+				$(".op1 li:nth-child(3)").addClass("cc");
+				$(".op1 li:nth-child(3)").siblings().removeClass("cc");
+			}if(qdate=='3'){
+				$(".op1 li:nth-child(4)").addClass("cc");
+				$(".op1 li:nth-child(4)").siblings().removeClass("cc");
+			}
+			
+			if(qtype==''){
+				$(".op2 li:nth-child(1)").addClass("cc");
+				$(".op2 li:nth-child(1)").siblings().removeClass("cc");
+			}if(qtype=='1'){
+				$(".op2 li:nth-child(2)").addClass("cc");
+				$(".op2 li:nth-child(2)").siblings().removeClass("cc");
+			}if(qtype=='2'){
+				$(".op2 li:nth-child(3)").addClass("cc");
+				$(".op2 li:nth-child(3)").siblings().removeClass("cc");
+			}if(qtype=='3'){
+				$(".op2 li:nth-child(4)").addClass("cc");
+				$(".op2 li:nth-child(4)").siblings().removeClass("cc");
+			}
+			
+			if(qstate==''){
+				$(".op3 li:nth-child(1)").addClass("cc");
+				$(".op3 li:nth-child(1)").siblings().removeClass("cc");
+			}if(qstate=='1'){
+				$(".op3 li:nth-child(2)").addClass("cc");
+				$(".op3 li:nth-child(2)").siblings().removeClass("cc");
+			}if(qstate=='2'){
+				$(".op3 li:nth-child(3)").addClass("cc");
+				$(".op3 li:nth-child(3)").siblings().removeClass("cc");
+			}if(qstate=='4'){
+				$(".op3 li:nth-child(4)").addClass("cc");
+				$(".op3 li:nth-child(4)").siblings().removeClass("cc");
+			}if(qstate=='3'){
+				$(".op3 li:nth-child(5)").addClass("cc");
+				$(".op3 li:nth-child(5)").siblings().removeClass("cc");
+			}
+		})
+		$(function(){
+			$(".turn").each(function(){
+				if($(this).text()=='成功'){
+					$(this).css("color","#32CD32");
+				}if($(this).text()=='失败'){
+					$(this).css("color","red");
+				}if($(this).text()=='待审核'){
+					$(this).css("color","#FF7F24");
+				}if($(this).text()=='不通过'){
+					$(this).css("color","blue");
+				}
+			})
+		})
+		$(function(){
+			var size = $("#size").val();
+			if(size==null||size=='0'){
+				$("#rightdown").hide();
+				$("#tips").html("暂无数据");
+			}else{
+				$("#rightdown").show();
+				$("#tips").html("");
+			}
+		})
+</script>

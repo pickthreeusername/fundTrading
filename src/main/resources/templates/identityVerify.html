@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>personal Info</title>
+<link rel="stylesheet" href="/customer/webjars/bootstrap/4.3.1/css/bootstrap.css">
+<script type="text/javascript" src="/customer/webjars/jquery/3.3.1-2/jquery.js"></script>
+<style>
+	#main{
+		height:450px;
+	}
+	/* a:link{
+		color:#6699FF;
+	} */
+	.lableClass{
+	display: inline-block;
+	width: 110px;
+	text-align:right;
+	margin-right:20px;
+}
+	.input_div{
+		height:30px;
+		line-height:30px;
+		margin-top:30px;
+		padding-left:100px;
+	}
+	.input_class{
+		border-radius:5px;
+		padding-left:5px;
+		background-color:white;
+		width:250px;
+		border:1px solid #CCCCCC;
+		/* color:#FF7800; */
+		font-size: 14px;
+		font-family:"微软雅黑" ;
+		
+	}
+	.fontClass{
+	color:#666666;
+	font-size: 14px;
+	font-family:"微软雅黑" ;
+}
+	span{
+		cursor:pointer;
+		font-size: 14px;
+		display: inline-block;
+		height:30px;
+		line-height:30px;
+	}
+	#right_content{
+		width:750px;
+		margin-left:400px;
+		border:1px solid #CCCCCC;
+		height:400px;
+		padding-left:30px;
+		margin-top:20px;
+	}
+	.title_font{
+		padding-left:0px;
+		color:#999999;
+		font-size: 16px;
+		font-family:"微软雅黑" ;
+	}
+	.next_btn{
+		border-radius:5px;
+		background-color:#FF7800;
+		width:230px;
+		border:none;
+		color:white;
+		font-size: 16px;
+		font-family:"微软雅黑" ;
+		margin-left:120px;
+		cursor:pointer;
+	}
+	.tip_class{
+		color:red;
+		padding-left:20px;
+	}
+	#success{
+		margin-top:30px;
+		font-size:20px;
+		font-weight:bolder;
+		color:#FF7800;
+		padding-left:290px;
+		display:none;
+	}
+</style>
+</head>
+<body>
+	<div th:include="header :: common"></div>
+	<div th:include="header :: nav"></div>
+	<div id="main" >
+			<div id="right_content"  class="fontClass">
+				<div id="idInfo">
+					<div class="input_div title_font" style="text-align:center;">
+						<label class="lableClass">实名认证</label>
+					</div>
+					<div class="input_div">
+						<label class="lableClass">姓名</label>
+						<input type="text" class="input_class" style="display:hidden" maxlength=10 id="realName"/>
+						<span class="tip_class" id="nameTip"></span>
+					</div>
+					<div class="input_div">
+						<label class="lableClass">身份证号</label>
+						<input type="text" class="input_class" maxlength=18 id="idCard"/>
+						<span class="tip_class" id="cardTip"></span>
+					</div>
+					<div class="input_div">
+						<label class="lableClass">税收居民身份</label>
+						<input type="text" style="border:none" class="input_class" value="仅为中国税收居民"  disabled/>
+					</div>
+					
+					<div class="input_div" >
+						<input type="button" class="next_btn" value="确认" id="confirm" />
+					</div>
+				</div>
+				<div id="success">
+						认证成功 ！
+				</div>
+			</div>
+	
+	</div>
+	<div th:include="footer :: common"></div>
+</body>
+<script type="text/javascript">
+	$(function(){
+		$("#zhaqgl").css("background-color","darkorange");
+		$("#confirm").click(function(){
+			
+			var nameTip = $("#nameTip");
+			var cardTip = $("#cardTip");
+			nameTip.html("");
+			cardTip.html("");
+			var regName = /^[\u4E00-\u9FA5]{2,10}$/;
+			var regCard = /^[1-9]\d{5}(18|19|20|21|22)\d{2}((0[1-9])|10|11|12)(0[1-9]|[12]\d|3[01])\d{3}([0-9]|X)$|^[1-9]\d{5}\d{2}((0[1-9])|10|11|12)(0[1-9]|[12]\d|3[01])\d{3}$/;
+			var name = $("#realName").val();
+			var idCard = $("#idCard").val();
+			if (name == ""){
+				nameTip.html("请输入姓名");
+			}else if(regName.test(name) == false){
+				nameTip.html("姓名为2-10个中文字符");
+			}else if(idCard == ""){
+				cardTip.html("请输入身份证号");
+			}else if (regCard.test(idCard) == false){
+				cardTip.html("身份证号错误！")
+			}else{
+				//查看身份证号是否存在
+				$.ajax({
+					async : false,
+					url : "/customer/security/ifIdCardExist.do",
+					data : {"idCard":idCard},
+					success : function(msg){
+						if (msg == 0){
+							//数据库中没有该身份证号
+							$.ajax({
+								url : "/customer/security/idAuthentication.do",
+								type : "post",
+								data : {"name":name,"idCard":idCard},
+								success : function(msg){
+									if (msg == 1){
+										$("#idInfo").hide();
+										$("#success").show();
+										setTimeout(function(){
+											location.href = "/customer/security/toSecurityMg.do";
+										},500);
+									}else{
+										$("#cardTip").html("认证失败！");
+									}
+								},
+								fail : function(){
+									alert("ajax fail");
+								}
+							});
+						}else{
+							$("#cardTip").html("该证件号已在本网站认证！");
+						}
+					}
+				});
+				
+			}
+		})
+	})
+	
+</script>
+</html>

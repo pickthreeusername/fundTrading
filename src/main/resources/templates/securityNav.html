@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<header th:fragment="nav">
+	<script type="text/javascript" src="/customer/webjars/jquery/3.3.1-2/jquery.js"></script>
+	<style>
+		#leftNav{
+			width:220px;
+			
+		}
+		#myhead{
+			background-color:#FFA900;
+			height:160px;
+			text-align:center;
+		}
+		#security_ul{
+		padding:0;
+		}
+		#security_ul li{
+			cursor:pointer;
+			text-align:center; 
+			list-style:none;
+			color:#CCCCCC;
+			height:40px;
+			line-height:40px;
+			font-size: 14px;
+			font-family:"微软雅黑" ;
+		}
+		#security_ul li:hover{
+			background-color:#FFF2E1;
+			color:#AEAEAE;
+		}
+		#bot{
+			border:1px solid #CCCCCC;
+			height:300px;
+			background-color:white;
+		}
+		.whiteFont{
+			color:white;
+			font-size: 14px;
+			font-family:"微软雅黑" ;
+		}
+		.bg_red{
+			background-color:#FFF2E1;
+		}
+	</style>
+	
+	<div id="leftNav">
+		<div id="myhead" class="whiteFont">
+			<img src="/customer/images/userHead.PNG"/>
+			<p>你好&nbsp;<span style="height:10px" th:if="${session.loginUser.realName}" th:text="${session.loginUser.realName}" ></span></p>
+			<!-- <p>欢迎来到嘎嘎理财</p> -->
+		</div>
+		<div id="bot">
+			<ul id="security_ul" class=".whiteFont">
+				<li onclick="toAddress('toSecurityMg.do')" id="tools">安全工具</li>
+				<li onclick="toAddress('toAlterPassword.do')" id="alterPwd">修改登录密码</li>
+				<li th:onclick="${session.loginUser.padPay}?'toAddress(\'toAlterTransCode.do\')':'toAddress(\'toSetTransCode.do\')'" th:text="${session.loginUser.padPay}?'修改交易密码':'设置交易密码'" id="alterTransCode"></li>
+				<li onclick="toAddress('toAlterPhone.do')" id="alterPhone">修改手机号码</li>
+			</ul>
+		
+		</div>
+	</div>
+	<script type="text/javascript">
+		function toAddress(url){
+			var prefix = "/customer/security/";
+			var locate = prefix + url;
+			location.href= locate;
+		}
+		$(function(){
+			$("#zhaqgl").css("background-color","darkorange");
+			$("#security_ul").children().click(function(){
+				$(this).addClass("bg_red").siblings().removeClass("bg_red");
+			})
+			
+		})
+	
+	
+	</script>
+</header>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>账户交易记录</title>
+<link rel="stylesheet" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}">
+<script type="text/javascript" th:src="@{/webjars/jquery/3.3.1-2/jquery.js}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
+<style type="text/css">
+#content{
+	background-color:#f9f9f9;
+	whdth:100%;
+	height:auto;
+}
+#zcgl{
+	background-color:darkorange;
+}
+#query_box{
+	margin:1% 14% 0 14%;
+	height:200px;
+	background-color:#fff;
+	border:solid 1px #ddd;
+	padding:4%;
+}
+#tb_box{
+	text-align:center;
+	margin:1% 14% 3% 14%;
+	height:auto;
+	background-color:#fff;
+	border:solid 1px #ddd;
+}
+.line{
+	font-size: 20px;
+	margin-top: -30px;
+	margin-bottom: 40px;
+}
+</style>
+<script type="text/javascript">
+$(function(){
+	//改变表格显示
+	$("td[name=operation]").each(function(){
+		var op = $(this).text();
+		if(op==1){
+			$(this).text("充值");
+		}
+		if(op==2){
+			$(this).text("快速取现");
+		}
+		if(op==3){
+			$(this).text("普通取现");
+		}
+		if(op==4){
+			$(this).text("申购");
+		}
+		if(op==5){
+			$(this).text("赎回");
+		}
+	})
+	$("td[name=status]").each(function(){
+		var op = $(this).text();
+		if(op==1){
+			$(this).text("成功");
+		}
+		if(op==2){
+			$(this).text("失败");
+		}
+		if(op==3){
+			$(this).text("申请成功");
+		}
+		if(op==4){
+			$(this).text("撤单成功");
+		}
+	})
+	//设置表格显示样式
+	$("td[name=inmoney]").each(function(){
+		$(this).css("color","darkorange");
+	})
+	$("td[name=outmoney]").each(function(){
+		$(this).css("color","blue");
+	})
+	//按钮点击提交
+	$("#query_one").children().click(function(){
+		var did = $(this).attr("d_id");
+		$("#q1").val(did);
+		$("#btn_sub").click();
+	})
+	$("#query_two").children().click(function(){
+		var did = $(this).attr("d_id");
+		$("#q2").val(did);
+		$("#btn_sub").click();
+	})
+	$("#query_three").children().click(function(){
+		var did = $(this).attr("d_id");
+		$("#q3").val(did);
+		$("#btn_sub").click();
+	})
+	//按钮选中回显
+	var qdate = $("#q1").val();
+	var qopera = $("#q2").val();
+	var qstate = $("#q3").val();
+
+	$("#query_one").find("button[d_id='"+qdate+"']").css("background","orange");
+	$("#query_one").find("button[d_id='"+qdate+"']").siblings().css("background","#fff");
+	
+	$("#query_two").find("button[d_id='"+qopera+"']").css("background","orange");
+	$("#query_two").find("button[d_id='"+qopera+"']").siblings().css("background","#fff");
+		
+	$("#query_three").find("button[d_id='"+qstate+"']").css("background","orange");
+	$("#query_three").find("button[d_id='"+qstate+"']").siblings().css("background","#fff");
+	
+	if($("tbody tr").html()==undefined){
+		$("#tb_box").html("<span style='line-height:50px;'>暂无数据</span>");
+	}
+})
+</script>
+</head>
+<body>
+	<!-- 头部 -->
+	<div th:include="header :: common"></div>
+	<!-- 导航栏 -->
+	<div th:include="header :: nav"></div>
+	<!-- 内容 -->
+	<div id="content">
+		<div style="margin-left:13%;font-size:13px;margin-top:8px;"><a href="/customer/toMyAsset.do">资产管理</a>&lt;<span style="color:darkorange;">账户交易记录</span></div>
+		<div id="query_box">
+			<div style="display:none;">
+				<form action="/customer/toMyListAsset.do" method="post">
+					<input type="hidden" name="queryTradeDate" id="q1" th:value="${query.queryTradeDate}">
+					<input type="hidden" name="queryTradeType" id="q2" th:value="${query.queryTradeType}">
+					<input type="hidden" name="queryTradeState" id="q3" th:value="${query.queryTradeState}">
+					<input type="submit" id="btn_sub">
+				</form>
+			</div>
+			<div class="row line" id="query_one">
+				交易时间：
+				&nbsp;<button class="btn btn-link text-dark" d_id="0" style="background:orange;">全部</button>
+				&nbsp;<button class="btn btn-link text-dark" d_id="1">近一周</button>
+				&nbsp;<button class="btn btn-link text-dark" d_id="2">近一月</button>
+				&nbsp;<button class="btn btn-link text-dark" d_id="3">近三月</button>
+			</div>
+			<div class="row line" id="query_two">
+				交易类型：
+				&nbsp;<button class="btn btn-link text-dark" d_id="0" style="background:orange;">全部</button>
+				&nbsp;<button class="btn btn-link text-dark" d_id="1">充值</button>
+				&nbsp;<button class="btn btn-link text-dark" d_id="2">快速取现</button>
+				&nbsp;<button class="btn btn-link text-dark" d_id="3">普通取现</button>
+				&nbsp;<button class="btn btn-link text-dark" d_id="4">申购</button>
+				&nbsp;<button class="btn btn-link text-dark" d_id="5">赎回</button>
+			</div>
+			<div class="row line" id="query_three">
+				交易结果：
+				&nbsp;<button class="btn btn-link text-dark" d_id="0" style="background:orange;">全部</button>
+				&nbsp;<button class="btn btn-link text-dark" d_id="1">成功</button>
+				&nbsp;<button class="btn btn-link text-dark" d_id="2">失败</button>
+				&nbsp;<button class="btn btn-link text-dark" d_id="3">申请成功</button>
+				&nbsp;<button class="btn btn-link text-dark" d_id="4">撤单成功</button>
+			</div>
+		</div>
+		<div id="tb_box">
+			<table class="table table-striped text-center">
+				<thead>
+					<tr>
+						<td>交易时间</td>
+						<td>交易类型</td>
+						<td>流入（元）</td>
+						<td>支出（元）</td>
+						<td>状态</td>
+						<td>备注</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="ua:${list_ua.list}">
+						<td th:text="${{ua.tradetime}}"></td>
+						<td name="operation" th:text="${ua.operation}"></td>
+						<td name="inmoney" th:text="${#numbers.formatDecimal(ua.inmoney,1,2)}==null?'':'+'+${#numbers.formatDecimal(ua.inmoney,1,2)}"></td>
+						<td name="outmoney" th:text="${#numbers.formatDecimal(ua.outmoney,1,2)}==null?'':'-'+${#numbers.formatDecimal(ua.outmoney,1,2)}"></td>
+						<td name="status" th:text="${ua.status}"></td>
+						<td th:text="${ua.remark}"></td>
+					</tr>
+				</tbody>
+			</table>
+			<div style="margin:0 20% 0 24%;background-color:#f9f9f9;">
+				<span style="float:left;line-height:45px;">共 [[${list_ua.total}]]条记录 &nbsp;&nbsp; 当前第[[${list_ua.pageNum}]]页&nbsp;&nbsp;共[[${list_ua.pages}]]页</span>
+				<ul class="pagination" th:if="${list_ua.total!=0}" style="margin-left:2%;float:left;">
+					<li class="page-item" style="margin:10px"><a th:href="@{toMyListAsset.do(pageNum=1,queryTradeDate=${query.queryTradeDate},queryTradeType=${query.queryTradeType},queryTradeState=${query.queryTradeState})}">首页</a></li>
+					<li class="page-item" style="margin:10px" th:if="${list_ua.pageNum==1}" th:class="disabled"><a>上一页</a></li>
+					<li class="page-item" style="margin:10px" th:if="${list_ua.pageNum>1}"><a th:href="@{toMyListAsset.do(pageNum=${list_ua.pageNum-1},queryTradeDate=${query.queryTradeDate},queryTradeType=${query.queryTradeType},queryTradeState=${query.queryTradeState})}">上一页</a></li>
+					<li class="page-item" style="margin:10px" th:if="${list_ua.pageNum==list_ua.pages}" th:class="disabled"><a>下一页</a></li>
+					<li class="page-item" style="margin:10px" th:if="${list_ua.pageNum!=list_ua.pages}"><a th:href="@{toMyListAsset.do(pageNum=${list_ua.pageNum+1},queryTradeDate=${query.queryTradeDate},queryTradeType=${query.queryTradeType},queryTradeState=${query.queryTradeState})}">下一页</a></li>
+					<li class="page-item" style="margin:10px"><a th:href="@{toMyListAsset.do(pageNum=${list_ua.pages},queryTradeDate=${query.queryTradeDate},queryTradeType=${query.queryTradeType},queryTradeState=${query.queryTradeState})}">尾页</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<!-- 底部引用 -->
+	<div th:include="footer :: common"></div>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<!-- 黄炜 -->
+<meta charset="UTF-8">
+<title>账户充值</title>
+<link rel="stylesheet" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}">
+<script type="text/javascript" th:src="@{/webjars/jquery/3.3.1-2/jquery.js}"></script>
+<script type="text/javascript" th:src="@{/scripts/numToChinese.js}"></script>
+</head>
+<style type="text/css">
+	#zcgl{
+		background-color:darkorange;
+	}
+	#content{
+		background-color:#f9f9f9;
+		whdth:100%;
+		height:500px;
+	}
+	#charge_form{
+		margin:0 18% 0 18%;
+		height:450px;
+		background-color:#fff;
+		border:solid 1px #ddd;
+		padding:5% 15% 5% 15%;
+	}
+</style>
+<script type="text/javascript">
+	$(function(){
+		$("#btn_check").click(function(){
+			var pad = $("#pad").val();
+			var reg = /^([1-9][0-9]*){8}$/
+			if(pad==""){
+				alert("请输入交易密码！")
+				return;
+			}else if(!reg.exec(pad)){
+				alert("交易密码为八位数字！")
+				return;
+			}
+			var money = $("#reMoney").text().substring(0,reMoney.indexOf('元'));
+			var cardid = $("#card").children("span").attr("id"); 
+			$.post({
+				url:"/customer/doRecharge.do",
+				type:"post",
+				async:true,
+				data:{"pad":pad, "money":money, "cardid":cardid},
+				success:function(reg){
+					if(reg=="1"){
+						location.href="/customer/toMyAsset.do";
+					}else{
+						alert(reg);
+					}
+				}
+			})
+		})
+		var reMoney = $("#reMoney").text();
+		var n = reMoney.substring(0,reMoney.indexOf('元'));
+		var t = numToChinese(n);
+		$("#bigMoney").text(t);
+	})
+	
+</script>
+<body>
+	<!-- 头部 -->
+	<div th:include="header :: common"></div>
+	<!-- 导航栏 -->
+	<div th:include="header :: nav"></div>
+	<!-- 内容 -->
+	<div id="content">
+		<div id="charge_form">
+			<form class="form" method="post" style="font-size:18px;">
+				<div class="form-group row">
+					<label class="col-md-3 text-right">充值金额</label>
+					<div class="col-md-8"><span id="reMoney" th:text="${money}+'元'" style="color:darkorange;font-weight: bold;"></span></div>
+				</div>
+				<div class="form-group row">
+					<label class="col-md-3 text-right">金额大写</label>
+					<div class="col-md-8"><span id="bigMoney" style="font-weight: bold;"></span></div>
+				</div>
+			    <div class="form-group row" id="card">
+			    	<label class="col-md-3 text-right">支付银行卡</label>
+					<span class="col-md-8 font-weight-bold" th:id="${userBankCard.cardid}" th:text="${userBankCard.bankCard.bankname}+' | 尾号'+${#strings.substring(userBankCard.cardid,15,19)}"></span>  
+			    </div>
+			    <div class="form-group row">
+					<label class="col-md-3 text-right">交易密码</label>
+					<div class="col-md-5">
+						<input type="password" class="form-control form-control-lg" id="pad" maxlength="8" placeholder="请输入交易密码" autocomplete="off">
+					</div>
+				</div>
+			    <button class="btn btn-lg col-lg-6" id="btn_check" type="button" style="background-color:darkorange;color:#fff;margin:2% 20%">确认</button>
+			</form>
+		</div>
+	</div>
+	<!-- 底部引用 -->
+	<div th:include="footer :: common"></div>
+</body>
+</html>

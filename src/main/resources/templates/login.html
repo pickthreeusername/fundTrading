@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Customer login</title>
+<link rel="stylesheet" href="/customer/webjars/bootstrap/4.3.1/css/bootstrap.css">
+<script type="text/javascript" src="/customer/webjars/jquery/3.3.1-2/jquery.js"></script>
+<script type="text/javascript" src="/customer/scripts/login.js"></script>
+<style type="text/css">
+			a {
+				color: black;
+			}
+			a:hover {
+				color: orange;
+				text-decoration: none;
+			}
+			#head{
+				background-color: #F5F5F5;
+				height: 30px;
+				line-height: 30px;
+			}
+			 ul{
+				margin-left: 700px;
+			}
+			ul li{
+				list-style: none;
+				float: left;
+				margin-left: 10px;
+				font-size: 12px;
+			}
+			li a{
+				text-decoration: none;
+			}
+			#top{
+				margin-top: -16px;
+				height: 100px;
+				line-height: 100px;
+			}
+			#listone li{
+				float: left;
+				margin-left: 150px;
+			}
+			#listtwo{
+				margin-right: 100px;
+			}
+			#listtwo li{
+				float: right;
+				margin-right: 100px;
+				font-size: 20px;
+				font-weight: bold;
+			}
+			.formContent{
+				width:80%;
+				margin-top:10px;
+				margin-left:10%;
+				height:40px;
+				line-heigth:40px;
+				
+			}
+		</style>
+</head>
+<body>
+<div class="container-fluid">
+	<div class="row">
+			<div class="col-lg-12" id="head">
+				<ul>
+					<li>微信 </li>
+					<li>|</li>
+					<li>微博</li>
+					<li>|</li>
+					<li>在线客服</li>
+					<li>|</li>
+					<li>联系我们：666-888-6688</li>
+					<li>|</li>
+					<li><a href="/customer/user/toRegister.do">[ 注册  ]</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="row" style="border-bottom:1px solid #F5F5F5">
+			<div class="col-lg-6 offset-lg-2">
+				<img src="/customer/images/logo.png" style="height: 80px;margin-top: 2px;">
+			</div>
+		</div>
+		
+			<div  style="background-color:#F5F5F5;width:300px;height:350px;margin-top:40px;margin-left:60%">
+				<div  class="formContent" style="line-height:60px;">
+					用户登录
+				</div>
+				<form method="post" action="#">
+				
+				
+				<div  class="formContent" style="margin-top:8%;">
+				    <input type="text" class="form-control" id="mobilePhone" maxlength="11"  placeholder="手机号"  required pattern="^[0-9]{11}$"/>
+				</div>
+				
+				<div  class="formContent" style="margin-top:8%;">
+				    <input type="password" class="form-control" id="pwd" maxlength="18" placeholder="密码" required/>
+				</div>
+				<div  class="formContent" style="margin-top:4%;">
+				   <span id="tips" style="color:red;font-size:12px"></span>
+				</div>
+				<div class="formContent" style="margin-top:8%;">
+				   <button id="confirm" type="button" class="btn btn-sm col-lg-12 font-weight-bold" 
+				   style="background-color:orange;color:#fff;margin-top:4%;" >登 录</button>
+				</div>
+				</form>
+			</div>
+  
+		<div class="row" style="margin-top:40px">
+			<div class="col-lg-12" >
+				<div th:include="footer :: common"></div>
+			</div>
+		</div>
+	
+</div>
+<!-- 底部引用 -->
+
+</body>
+</html>

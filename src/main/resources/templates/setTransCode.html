@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>set transCode</title>
+<link rel="stylesheet" href="/customer/webjars/bootstrap/4.3.1/css/bootstrap.css">
+<script type="text/javascript" src="/customer/webjars/jquery/3.3.1-2/jquery.js"></script>
+<script type="text/javascript" src="/customer/scripts/securityFun.js"></script>
+<style>
+	#main{
+		height:500px;
+		padding-top:20px;
+		background-color:#F5F5F5;
+	}
+	.tip_class{
+		color:red;
+		padding-left:20px;
+		font-size:12px;
+	}
+	.lableClass{
+	display: inline-block;
+	width: 110px;
+}
+	.input_div{
+		height:30px;
+		line-height:30px;
+		margin-top:30px;
+	}
+	.input_class{
+		border-radius:5px;
+		background-color:white;
+		width:200px;
+		border:1px solid #CCCCCC;
+		color:#999999;
+		font-size: 16px;
+		font-family:"微软雅黑" ;
+		
+	}
+	.fontClass{
+	color:#666666;
+	font-size: 16px;
+	font-family:"微软雅黑" ;
+}
+	
+	span{
+		cursor:pointer;
+		font-size: 14px;
+		display: inline-block;
+		height:30px;
+		line-height:30px;
+	}
+	.next_btn{
+		border-radius:5px;
+		background-color:#FF7800;
+		width:200px;
+		border:none;
+		color:white;
+		font-size: 16px;
+		font-family:"微软雅黑" ;
+		margin-left:100px;
+		cursor:pointer;
+		margin-top:20px;
+	}
+	#leftNav{
+		width:310px;
+		float:left;
+		margin-left:100px;
+	}
+	#right_content{
+		width:700px;
+		margin-left:450px;
+		border:1px solid #CCCCCC;
+		height:400px;
+		padding-left:30px;
+		background-color:white;
+	}
+	#success{
+		margin-top:30px;
+		font-size:18px;
+		color:#FF7800;
+		padding-left:290px;
+		display:none;
+	}
+</style>
+</head>
+<body>
+	<div th:include="header :: common"></div>
+	<div th:include="header :: nav"></div>
+	<div id="main" >
+			<div id="right_content"  class="fontClass">
+				<div id="setCodeContent" style="padding-left:70px" >
+					<div class="input_div">
+						<input type="text" class="input_class" value="设置交易密码" disabled style="color:#CCCCCC;font-size: 16px;border:none;width:330px"/>
+					</div>
+					<div class="input_div">
+						<label class="lableClass">设置交易密码</label>
+						<input type="password" class="input_class" id="newPwd" maxlength=8 />
+						<span class="tip_class" id="newPwdTip" ></span>
+					</div>
+					<div class="input_div">
+						<label class="lableClass">再次输入密码</label>
+						<input type="password" class="input_class" id="rePwd"/>
+						<span class="tip_class" id = "rePwdTip"></span>
+					</div>
+					<div class="input_div">
+						<input type="button" class="next_btn" value="确定" id="confirm">
+					</div>
+				</div>
+				<div id="success">
+						设置成功
+				</div>
+			</div>
+	</div>
+	<div th:include="footer :: common"></div>
+</body>
+<script type="text/javascript">
+		$(function(){
+			$("#zhaqgl").css("background-color","darkorange");
+			//提交按钮
+			$("#confirm").click(function(){
+				updateCode("transCode","#setCodeContent","set");
+			})
+		})
+	</script>
+</html>

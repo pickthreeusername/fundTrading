@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet"
+	th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}">
+</head>
+<style>
+.black_overlay {
+	display: none;
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	z-index: 1001;
+	-moz-opacity: 0.8;
+	opacity: .80;
+	filter: alpha(opacity = 88);
+}
+
+.white_content {
+	display: none;
+	position: absolute;
+	top: 25%;
+	left: 35%;
+	width: 35%;
+	height: 40%;
+	padding: 20px;
+	border: 10px solid orange;
+	background-color: white;
+	z-index: 1002;
+	overflow: auto;
+}
+.span_aa{
+    font-size: 20px;
+
+}
+.div_aa{
+    border-radius:15px 15px 15px 15px;
+    /* background-color: gainsboro;  */
+    box-shadow: darkgrey 5px 5px 30px 1px;
+    width: 500px;
+}
+.p_aa{
+   height: 30px;
+}
+</style>
+<body>
+	<div th:include="header :: common"></div>
+	<div th:include="header :: nav"></div>
+	<hr>
+	<form action="addPersonalFund" method="post">
+	<div class="div_aa container" style="width: 38%">
+	<div class="container div_aa">
+	<p class="p_aa"></p>
+	<input name="fundid" type="text" th:value="${fund.id}" style="display: none;">
+	<input name="orderid" type="text" th:value="${orderid}" style="display: none;">
+	<input name="daxie" type="text" th:value="${daxie}" style="display: none;">
+	<input name="portion" type="text" th:value="${portion!=null}?${portion}:0"  style="display: none;">
+	<input name="bankcardid" type="text" th:value="${bankcard!=null}?${bankcard.cardid}:0" style="display: none;">
+	<ul class="list-group">
+	   <li class="list-group-item"><span class="span_aa">基金信息:</span><span class="span_aa">[[${fund.fundname}]]([[${fund.fundid}]])</span></li>
+       <li class="list-group-item"><span class="span_aa">支付方式:</span><span class="span_aa" th:text="${bankcard!=null}?${bankcard.bankCard.bankname}"></span><span class="span_aa" th:if="${bankcard==null}">余额支付</span></li>
+       <li class="list-group-item"><span class="span_aa">购买金额:[[${portion}]]<span th:if="${portion}==null">0</span></span></li>
+       <li class="list-group-item"><span class="span_aa">大写金额:[[${daxie}]]<span th:if="${portion}==null">零圆整</span></span></li>
+	</ul>
+	
+	<div class="input-group input-group-lg">
+       <div class="input-group-prepend">
+         <span class="input-group-text" id="inputGroup-sizing-lg">交易密码:</span>
+       </div>
+         <input name="padPay" type="password" required="required" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+    </div>
+         <span style="color: red;font-size: 20px" th:if="${not #strings.isEmpty(msg)}">[[${msg}]]</span>
+	<p>
+		<button type="submit" class="btn btn-warning container">确认交易</button>
+	<p class="p_aa"></p>
+
+</div>
+</div>
+	</form>
+	<hr>
+	<div id="fade" class="black_overlay"></div>
+
+
+	<div th:include="footer :: common"></div>
+
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+	<script type="text/javascript"
+		th:href="@{/asserts/js/jquery-3.2.1.slim.min.js}"
+		src="asserts/js/jquery-3.2.1.slim.min.js"></script>
+	<script type="text/javascript" th:href="@{/asserts/js/popper.min.js}"
+		src="asserts/js/popper.min.js"></script>
+	<script type="text/javascript"
+		th:href="@{/asserts/js/bootstrap.min.js}"
+		src="asserts/js/bootstrap.min.js"></script>
+	<!-- Icons -->
+	<script type="text/javascript" th:href="@{/asserts/js/feather.min.js}"
+		src="asserts/js/feather.min.js"></script>
+	<!-- Graphs -->
+	<script type="text/javascript" th:href="@{/asserts/js/Chart.min.js}"
+		src="asserts/js/Chart.min.js"></script>
+	<script type="text/javascript" src="scripts/jquery-3.3.1.js"></script>
+	<script type="text/javascript"
+		th:href="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
+	<script>
+		
+	</script>
+
+</body>
+</html>

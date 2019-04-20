@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>我的定投</title>
+<link rel="stylesheet" href="/customer/webjars/bootstrap/4.3.1/css/bootstrap.css">
+<script type="text/javascript" src="/customer/webjars/jquery/3.3.1-2/jquery.js"></script>
+<style>
+	#body{
+		height:900px;
+		width:100%;
+		margin-top:1%;
+		padding-left:12%;
+		text-align:center;
+	}
+	#bodyleft{
+		float:left;
+	}
+	#bodyright{
+		float:left;
+		margin-right:80px;
+		margin-left:20px;
+		width:810px;
+	}
+	#leftmsg{
+		border:1px solid #DCDCDC;
+		height:200px;
+		padding-top:30px;
+		background-color: 	#FFA500;
+		width:250px;
+	}
+	#righttop{
+		border:1px solid #DCDCDC;
+		margin-bottom: 20px;
+		height:200px;
+	}
+	tr{
+		height:35px;
+		line-height: 35px;
+	}
+	#grjjgl{
+		background-color: darkorange;
+	}
+</style>
+</head>
+<body>
+	<div th:include="header :: common"></div>
+	<div th:include="header :: nav"></div>
+	<div id="body">
+		<div id="bodyleft">
+			<div id="leftmsg">
+				<img th:src="@{/images/am_img.jpg}" style="border-radius: 50%">
+				<p style="font-size: 25px;color:white;font-family:'黑体'" th:text="${session.loginUser.realName}!=null?'您好，'+${session.loginUser.realName}:'您好'">您好，xx</p>
+			</div>
+			<div class="list-group" style="width:250px">
+				<a href="/customer/personalFund/toPersonal.do" class="list-group-item list-group-item-action">我的资产</a>
+				<a href="/customer/personalFund/toTrade.do" class="list-group-item list-group-item-action">交易记录</a>
+				<a href="/customer/personalFund/toInvest.do" class="list-group-item list-group-item-action" style="background:#FFE7BA">我的定投</a>
+				<a href="/customer/personalFund/toOnWay.do" class="list-group-item list-group-item-action">在途交易</a>
+			</div>
+		</div>
+		<div id="bodyright">
+<!-- 			<div id="righttop"> -->
+			
+<!-- 			</div> -->
+			<input type="hidden" th:value="${size}" id="size">
+			<p id="tips"></p>
+			<div id="rightdown">
+				<table class="table table-striped" style="border:1px solid #eee">
+					<thead>
+						<tr>
+							<td>基金名称</td>
+							<td>定投金额（元）</td>
+							<td>申请定投日期</td>
+							<td>下次定投日期</td>
+							<td>支付方式</td>
+							<td>状态</td>
+							<td>操作</td>
+						</tr>
+					</thead>
+					<tr th:each="invest:${pageInfo.list}">
+						<td th:text="${invest.fund.fundname}"></td>
+						<td th:text="${invest.eachpay}"></td>
+						<td th:text="${#dates.format(invest.investdate,'yyyy-MM-dd')}"></td>
+						<td th:text="${invest.bb}"></td>
+						<td th:text="${invest.cardid}=='0'?'余额':'卡号:'+${invest.cardid}"></td>
+						<td th:text="${invest.investstate.statename}" class="turn"></td>
+						<td>
+						<input type="button" th:onclick="javascript:cancelInvest([[${invest.orderid}]])" th:if="${invest.investstate.id!=4}" class="btn btn-primary btn-sm" value="取消定投"  style="width:80px;background-color:#FFA500;color:white;border:#FFA500">
+						</td>
+					</tr>
+				</table>
+				<p>共 [[${pageInfo.total}]]条记录 &nbsp;&nbsp; 当前第[[${pageInfo.pageNum}]]页&nbsp;&nbsp;共[[${pageInfo.pages}]]页</p>
+				<div>
+					<ul class="pagination" th:if="${pageInfo.total!=0}" style="margin-left:35%">
+						<li style="margin:10px"><a th:href="@{toInvest.do(pageNum=1)}">首页</a></li>
+						<li style="margin:10px" th:if="${pageInfo.pageNum==1}" th:class="disabled"><a>上一页</a></li>
+						<li style="margin:10px" th:if="${pageInfo.pageNum>1}"><a th:href="@{toInvest.do(pageNum=${pageInfo.pageNum-1})}">上一页</a></li>
+						<li style="margin:10px" th:if="${pageInfo.pageNum==pageInfo.pages}" th:class="disabled"><a>下一页</a></li>
+						<li style="margin:10px" th:if="${pageInfo.pageNum!=pageInfo.pages}"><a th:href="@{toInvest.do(pageNum=${pageInfo.pageNum+1})}">下一页</a></li>
+						<li style="margin:10px"><a th:href="@{toInvest.do(pageNum=${pageInfo.pages})}">尾页</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:include="footer :: common"></div>
+</body>
+</html>
+<script type="text/javascript">
+	function cancelInvest(orderid){
+		var flag = confirm("确认删除？");
+		if(flag){
+			location.href="/customer/purchaseTiming/toComeBack2?orderid="+orderid;
+		}else{
+			return;
+		}
+		
+	}
+	
+	$(function(){
+		$(".turn").each(function(){
+			if($(this).text()=='定投成功'){
+				$(this).css("color","#32CD32");
+			}if($(this).text()=='定投审核中'){
+				$(this).css("color","orange");
+			}if($(this).text()=='取消定投审核中'){
+				$(this).css("color","#FF7F24");
+			}if($(this).text()=='取消成功'){
+				$(this).css("color","blue");
+			}if($(this).text()=='审核不通过'){
+				$(this).css("color","red"); 
+			}
+		})
+	})
+	$(function(){
+		var size = $("#size").val();
+		if(size==null||size=='0'){
+			$("#rightdown").hide();
+			$("#tips").html("暂无数据");
+		}else{
+			$("#rightdown").show();
+			$("#tips").html("");
+		}
+	})
+</script>

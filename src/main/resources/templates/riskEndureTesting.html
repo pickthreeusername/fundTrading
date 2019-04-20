@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>personal Info</title>
+<link rel="stylesheet" href="/customer/webjars/bootstrap/4.3.1/css/bootstrap.css">
+<script type="text/javascript" src="/customer/webjars/jquery/3.3.1-2/jquery.js"></script>
+<style>
+	body{
+		font-family:"微软雅黑"
+	}
+	#main{
+		margin-bottom:20px;
+	}
+	/* a:link{
+		color:#6699FF;
+	} */
+	.lableClass{
+	display: inline-block;
+	/* width: 110px; */
+	color:#5E5E5E;
+	font-weight:bolder;
+}
+	.input_div{
+		/* height:30px;
+		line-height:30px; */
+		margin-top:10px;
+		padding-left:100px; 
+	}
+	.input_class{
+		border-radius:5px;
+		padding-left:5px;
+		background-color:white;
+		width:300px;
+		border:1px solid #CCCCCC;
+		color:#666666;
+		font-size: 14px;
+		font-family:"微软雅黑" ;
+		
+	}
+	.fontClass{
+		color:#666666;
+		font-size: 14px;
+	}
+	span{
+		cursor:pointer;
+		font-size: 14px;
+		display: inline-block;
+		height:30px;
+		line-height:30px;
+	}
+	#right_content{
+		width:750px;
+		margin-left:400px;
+		border:1px solid #CCCCCC;
+		padding-bottom:40px;
+		margin-top:20px;
+	}
+	.title_font{
+		color:#515151;
+		font-size: 18px;
+		font-weight:bolder;
+	}
+	.next_btn{
+		border-radius:5px;
+		background-color:#FF7800;
+		width:180px;
+		border:none;
+		color:white;
+		font-size: 16px;
+		font-family:"微软雅黑" ;
+		cursor:pointer;
+		
+	}
+	.radioClass{
+		border:1px solid #CCCCCC;
+		capacity:0;
+	}
+	.black_overlay {
+		display:none;
+		position: absolute;
+		top: 0%;
+		left: 0%;
+		width: 100%;
+		height: 205%;
+		background-color: black;
+		z-index: 1001;
+		-moz-opacity: 0.8;
+		opacity: 0.30;
+		filter: alpha(opacity = 99);
+	}
+	#success_div{
+		display:none;
+		position: absolute;
+		top: 110%;
+		left: 35%;
+		width: 25%;
+		height: 20%;
+		padding: 20px;
+		border: 4px solid #FFC107;
+		border-radius:10px;
+		background-color:white;
+		z-index: 1002;
+		overflow: auto;
+		color:#FFC107;
+		font-size: 18px;
+		font-family:"微软雅黑" ;
+		text-align:center;
+	}
+</style>
+</head>
+<body>
+<div id="fade" class="black_overlay"></div>
+	<div th:include="header :: common"></div>
+	<div th:include="header :: nav"></div>
+	<div id="main" >
+			<div id="right_content"  class="fontClass">
+				<div class=" title_font" style="text-align:center;margin-top:30px">
+					<label class="title_font">风险评估</label>
+				</div>
+				<div class="input_div">
+					<label class="lableClass">您的职业类别</label><br/>
+					<input type="radio" class="radio" value="5" name="proffesion" required/>&nbsp;&nbsp;金融业内人士<br/>
+					<input type="radio" class="radio" value="4" name="proffesion"/>&nbsp;&nbsp;国家机关干部<br/>
+					<input type="radio" class="radio" value="3" name="proffesion"/>&nbsp;&nbsp;事业单位<br/>
+					<input type="radio" class="radio" value="3" name="proffesion"/>&nbsp;&nbsp;技术人员<br/>
+					<input type="radio" class="radio" value="1" name="proffesion"/>&nbsp;&nbsp;学生<br/>
+					<input type="radio" class="radio" value="1" name="proffesion"/>&nbsp;&nbsp;农民<br/>
+					<input type="radio" class="radio" value="3" name="proffesion"/>&nbsp;&nbsp;医生<br/>
+					<input type="radio" class="radio" value="2" name="proffesion"/>&nbsp;&nbsp;个体户 、私营企业主<br/>
+					<input type="radio" class="radio" value="1" name="proffesion"/>&nbsp;&nbsp;退休人员<br/>
+					<input type="radio" class="radio" value="1" name="proffesion"/>&nbsp;&nbsp;其他<br/>
+				</div>
+				<div class="input_div">
+					<label class="lableClass">您的主要收入来源为</label><br/>
+					<input type="radio" class="radio" value="1" name="incomeSource" required/>&nbsp;&nbsp;无固定收入<br/>
+					<input type="radio" class="radio" value="2" name="incomeSource" required/>&nbsp;&nbsp;薪资、劳务报酬<br/>
+					<input type="radio" class="radio" value="3" name="incomeSource" required/>&nbsp;&nbsp;生产经营所得<br/>
+					<input type="radio" class="radio" value="4" name="incomeSource" required/>&nbsp;&nbsp;投资收入（包括但不限于利息、股息、转让证券等金融性资产）<br/>
+					<input type="radio" class="radio" value="5" name="incomeSource" required/>&nbsp;&nbsp;出租、出售房地产等非金融性资产收入<br/>
+				</div>
+				<div class="input_div">
+					<label class="lableClass">您认为您的收入来源（包括薪资等）是什么状态</label><br/>
+					<input type="radio" class="radio" value="1" name="incomeStatus" required/>&nbsp;&nbsp;非常不稳定，收入波动较大<br/>
+					<input type="radio" class="radio" value="2" name="incomeStatus" />&nbsp;&nbsp;不够稳定，有时会出现波动<br/>
+					<input type="radio" class="radio" value="3" name="incomeStatus" />&nbsp;&nbsp;比较稳定，但基本没有明显增长<br/>
+					<input type="radio" class="radio" value="4" name="incomeStatus" />&nbsp;&nbsp;稳定，每年能略有增长<br/>
+					<input type="radio" class="radio" value="5" name="incomeStatus" />&nbsp;&nbsp;非常稳定，不出意外，每年增长10%应该不成问题<br/>
+				</div>
+				<div class="input_div">
+					<label class="lableClass">您的年收入是多少</label><br/>
+					<input type="radio" class="radio" value="1" name="annuallyIncome" />&nbsp;&nbsp;2万元以下<br/>
+					<input type="radio" class="radio" value="2" name="annuallyIncome" />&nbsp;&nbsp;2万元至5万元<br/>
+					<input type="radio" class="radio" value="3" name="annuallyIncome" />&nbsp;&nbsp;5万元至15万元<br/>
+					<input type="radio" class="radio" value="4" name="annuallyIncome" />&nbsp;&nbsp;15万元至50万元<br/>
+					<input type="radio" class="radio" value="5" name="annuallyIncome" />&nbsp;&nbsp;50万元以上<br/>
+				</div>
+				<div class="input_div">
+					<label class="lableClass">您是否有过证券市场的投资经历，如有，投资时间是多长</label><br/>
+					<input type="radio" class="radio" value="1" name="investExp" />&nbsp;&nbsp;没有<br/>
+					<input type="radio" class="radio" value="2" name="investExp" />&nbsp;&nbsp;有，少于1年<br/>
+					<input type="radio" class="radio" value="3" name="investExp" />&nbsp;&nbsp;有，在1－3年之间<br/>
+					<input type="radio" class="radio" value="4" name="investExp" />&nbsp;&nbsp;有，在3－5年之间<br/>
+					<input type="radio" class="radio" value="5" name="investExp" />&nbsp;&nbsp;有，超过5年<br/>
+				</div>
+				
+				<div class="input_div">
+					<label class="lableClass">您是否存在不良信用记录</label><br/>
+					<input type="radio" class="radio" value="1" name="credit" />&nbsp;&nbsp;不存在不良信用记录<br/>
+					<input type="radio" class="radio" value="5" name="credit" />&nbsp;&nbsp;存在不良信用记录<br/>
+				</div>
+				<div class="input_div">
+					<label class="lableClass">投资的实际控制自然人是</label><br/>
+					<input type="radio" class="radio" value="1" name="investor" />&nbsp;&nbsp;本人<br/>
+					<input type="radio" class="radio" value="5" name="investor" />&nbsp;&nbsp;非本人<br/>
+				</div>
+				<div class="input_div" style="margin-top:30px">
+					<input type="button" class="next_btn" id="esc" value="取消" style="background-color:grey;margin-right:90px"/>
+					<input type="button" class="next_btn" id="com_btn" value="确认" />
+				</div>
+			</div>
+	
+	</div>
+	<div id="success_div">
+	</div>
+	<div th:include="footer :: common"></div>
+</body>
+<script type="text/javascript">
+$(function(){
+	$("#esc").click(function(){
+		location.href="/customer/info/toInfo.do"
+	})
+	$("#com_btn").click(function(){
+		//校验是否选中
+		var pro = $("input[name='proffesion']:checked").val();
+		if(pro == null){
+			alert("请选择职业类别!");
+            return false;
+		}else{
+			pro = parseInt(pro)
+		}
+		var inSource = $("input[name='incomeSource']:checked").val();
+		if(inSource == null){
+			alert("请选择您的主要收入来源!");
+            return false;
+		}else{
+			inSource = parseInt(inSource)
+		}
+		var inStatus = $("input[name='incomeStatus']:checked").val();
+		if(inStatus == null){
+			alert("请选择您的收入来源状态!");
+            return false;
+		}else{
+			inStatus = parseInt(inStatus)
+		}
+		var anIncome = $("input[name='annuallyIncome']:checked").val();
+		if(anIncome == null){
+			alert("请选择您的年收入!");
+            return false;
+		}else{
+			anIncome = parseInt(anIncome)
+		}
+		var investExp = $("input[name='investExp']:checked").val();
+		if(investExp == null){
+			alert("请选择您的投资时间!");
+            return false;
+		}else{
+			investExp = parseInt(investExp)
+		}
+		var credit = $("input[name='credit']:checked").val();
+		if(credit == null){
+			alert("请选择您是否有不良信用记录!");
+            return false;
+		}else{
+			credit = parseInt(credit)
+		}
+		var investor = $("input[name='investor']:checked").val();
+		if(investor == null){
+			alert("请选择您的投资的实际控制自然人!");
+            return false;
+		}else{
+			investor = parseInt(investor)
+		}
+		var score = pro+inSource+inStatus+anIncome+investExp+credit+investor;
+		$.ajax({
+			url:"/customer/info/updateRisk.do",
+			type:"post",
+			data:{"score":score},
+			success:function(reg){
+				var type;
+				if(reg!="0"){
+					if (reg == "1"){
+						type = "保守型";
+					}else if (reg == "2"){
+						type = "稳健型";
+					}else if (reg == "3"){
+						type = "积极型";
+					}else{
+						type = "激进型";
+					}
+					 $("#success_div").html("<p>您的风险承受等级为：" + type + "</p> <p><button  id='backToIndex' class='btn btn-warning' style='color:white'>确定</button></p>").show();
+	                 $("#fade").show();
+	                 $("#backToIndex").click(function(){
+	         			location.href="/customer/info/toInfo.do";
+	         		});
+					//location.href="/customer/info/toInfo.do";
+				}else{
+					alert("test fail");
+				}
+			}
+		});
+	});
+	
+})
+</script>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet"
+	th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}">
+</head>
+<style>
+.black_overlay {
+	display: none;
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	z-index: 1001;
+	-moz-opacity: 0.8;
+	opacity: .80;
+	filter: alpha(opacity = 88);
+}
+
+.white_content {
+	display: none;
+	position: absolute;
+	top: 25%;
+	left: 35%;
+	width: 35%;
+	height: 40%;
+	padding: 20px;
+	border: 10px solid orange;
+	background-color: white;
+	z-index: 1002;
+	overflow: auto;
+}
+.span_aa{
+    font-size: 20px;
+
+}
+.div_aa{
+    border-radius:15px 15px 15px 15px;
+    /* background-color: gainsboro;  */
+    box-shadow: darkgrey 5px 5px 30px 1px;
+    width: 500px;
+}
+.p_aa{
+   height: 30px;
+}
+</style>
+<body>
+	<div th:include="header :: common"></div>
+	<div th:include="header :: nav"></div>
+	<hr>
+	<form action="toPurchase2" method="post">
+	<div class="div_aa container" style="width: 38%">
+	<div class="container div_aa">
+	<p class="p_aa"></p>
+	<input name="id" type="text" th:value="${fund.id}" style="display: none;">
+	<input name="msg" type="text"  style="display: none;">
+	<input name="daxie" id="C_money2" type="text" style="display: none;">
+	
+	<ul class="list-group">
+	  <li class="list-group-item"><span class="span_aa">基金信息:</span><span class="span_aa">[[${fund.fundname}]]([[${fund.fundid}]])</span></li>
+      <li class="list-group-item"><span class="span_aa">支付方式:</span>
+	<select name="cardid">
+		<option value="0">余额支付</option>
+		<option th:value="${bcs.cardid}" th:each="bcs:${bankCards}">[[${bcs.bankCard.bankname}]][[${bcs.cardid}]]</option>
+	</select></li>
+	  <li class="list-group-item"><span class="span_aa">大写金额:</span>
+	<span class="span_aa" id="C_money1">零元整</span></li>
+	</ul>
+
+	<div class="input-group input-group-lg">
+       <div class="input-group-prepend">
+         <span class="input-group-text" id="inputGroup-sizing-lg">输入购买金额：</span>
+       </div>
+         <input name="portion" th:value="${portion!=null}?${portion}:0" pattern="^(-?\d+)(\.\d+)?$" oninvalid="setCustomValidity('请输入合法的数字!');" id="money" required="required" type="text" onblur="showChineseAmount();" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+    </div>
+        <span style="color: red;font-size: 20px" th:if="${not #strings.isEmpty(msg)}">[[${msg}]]</span>
+	<p>
+		<a href="javascript:void(0)"
+			onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'">
+			<button type="button" class="btn btn-warning container">下一步</button></a>
+	</p>
+	<p class="p_aa"></p>
+	</div>
+	</div>
+	<div id="light" class="white_content">
+	
+		<h3>风险承诺书</h3>		 
+		<br> <span>本人已充分圆度基金的基金合同.招募说明书等法律文件及相关公告,充分理解和接受该投资的全部风险,
+		该投资有可能产生的本金亏损,本人已完成风险调查问卷,并充分理解和接受《产品风险提示书》.自愿进行该投资,并愿意承担由此产生的损失及全部风险</span>
+		<p></p>
+		<a href="javascript:void(0)"
+			onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">
+			<button type="button" class="btn btn-warning">取消</button></a>
+		<a href="#"
+			onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">
+			<button type="submit" class="btn btn-warning">同意</button></a>
+
+	</div>
+	</form>
+	<hr>
+	<div id="fade" class="black_overlay"></div>
+
+
+	<div th:include="footer :: common"></div>
+
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+	<script type="text/javascript"
+		th:href="@{/asserts/js/jquery-3.2.1.slim.min.js}"
+		src="asserts/js/jquery-3.2.1.slim.min.js"></script>
+	<script type="text/javascript" th:href="@{/asserts/js/popper.min.js}"
+		src="asserts/js/popper.min.js"></script>
+	<script type="text/javascript"
+		th:href="@{/asserts/js/bootstrap.min.js}"
+		src="asserts/js/bootstrap.min.js"></script>
+	<!-- Icons -->
+	<script type="text/javascript" th:href="@{/asserts/js/feather.min.js}"
+		src="asserts/js/feather.min.js"></script>
+	<!-- Graphs -->
+	<script type="text/javascript" th:href="@{/asserts/js/Chart.min.js}"
+		src="asserts/js/Chart.min.js"></script>
+	<script type="text/javascript" src="scripts/jquery-3.3.1.js"></script>
+	<script type="text/javascript"
+		th:href="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
+	<script>
+		function showChineseAmount() {
+			var amstr = $("#money").val();
+			var leng = amstr.toString().split('.').length;
+			if (leng == 1) {
+				$("#money").val($("#money").val() + ".00");
+			}
+			$("#C_money1").html(Arabia_to_Chinese($("#money").val()));
+			$("#C_money2").val(Arabia_to_Chinese($("#money").val()));
+		}
+
+		function Arabia_to_Chinese(Num) {
+			for (i = Num.length - 1; i >= 0; i--) {
+				Num = Num.replace(",", "");
+				Num = Num.replace(" ", "");
+			}
+			Num = Num.replace("￥", "")
+			if (isNaN(Num)) {
+				return;
+			}
+			part = String(Num).split(".");
+			newchar = "";
+			for (i = part[0].length - 1; i >= 0; i--) {
+				if (part[0].length > 10) {
+					return "";
+				}
+				tmpnewchar = ""
+				perchar = part[0].charAt(i);
+				switch (perchar) {
+				case "0":
+					tmpnewchar = "零" + tmpnewchar;
+					break;
+				case "1":
+					tmpnewchar = "壹" + tmpnewchar;
+					break;
+				case "2":
+					tmpnewchar = "贰" + tmpnewchar;
+					break;
+				case "3":
+					tmpnewchar = "叁" + tmpnewchar;
+					break;
+				case "4":
+					tmpnewchar = "肆" + tmpnewchar;
+					break;
+				case "5":
+					tmpnewchar = "伍" + tmpnewchar;
+					break;
+				case "6":
+					tmpnewchar = "陆" + tmpnewchar;
+					break;
+				case "7":
+					tmpnewchar = "柒" + tmpnewchar;
+					break;
+				case "8":
+					tmpnewchar = "捌" + tmpnewchar;
+					break;
+				case "9":
+					tmpnewchar = "玖" + tmpnewchar;
+					break;
+				}
+				switch (part[0].length - i - 1) {
+				case 0:
+					tmpnewchar = tmpnewchar + "元";
+					break;
+				case 1:
+					if (perchar != 0)
+						tmpnewchar = tmpnewchar + "拾";
+					break;
+				case 2:
+					if (perchar != 0)
+						tmpnewchar = tmpnewchar + "佰";
+					break;
+				case 3:
+					if (perchar != 0)
+						tmpnewchar = tmpnewchar + "仟";
+					break;
+				case 4:
+					tmpnewchar = tmpnewchar + "万";
+					break;
+				case 5:
+					if (perchar != 0)
+						tmpnewchar = tmpnewchar + "拾";
+					break;
+				case 6:
+					if (perchar != 0)
+						tmpnewchar = tmpnewchar + "佰";
+					break;
+				case 7:
+					if (perchar != 0)
+						tmpnewchar = tmpnewchar + "仟";
+					break;
+				case 8:
+					tmpnewchar = tmpnewchar + "亿";
+					break;
+				case 9:
+					tmpnewchar = tmpnewchar + "拾";
+					break;
+				}
+				newchar = tmpnewchar + newchar;
+			}
+			if (Num.indexOf(".") != -1) {
+				if (part[1].length > 2) {
+					alert("小数点之后只能保留两位,系统将自动截段");
+					part[1] = part[1].substr(0, 2)
+				}
+				for (i = 0; i < part[1].length; i++) {//for2
+					tmpnewchar = ""
+					perchar = part[1].charAt(i)
+					switch (perchar) {
+					case "0":
+						tmpnewchar = "零" + tmpnewchar;
+						break;
+					case "1":
+						tmpnewchar = "壹" + tmpnewchar;
+						break;
+					case "2":
+						tmpnewchar = "贰" + tmpnewchar;
+						break;
+					case "3":
+						tmpnewchar = "叁" + tmpnewchar;
+						break;
+					case "4":
+						tmpnewchar = "肆" + tmpnewchar;
+						break;
+					case "5":
+						tmpnewchar = "伍" + tmpnewchar;
+						break;
+					case "6":
+						tmpnewchar = "陆" + tmpnewchar;
+						break;
+					case "7":
+						tmpnewchar = "柒" + tmpnewchar;
+						break;
+					case "8":
+						tmpnewchar = "捌" + tmpnewchar;
+						break;
+					case "9":
+						tmpnewchar = "玖" + tmpnewchar;
+						break;
+					}
+					if (i == 0)
+						tmpnewchar = tmpnewchar + "角";
+					if (i == 1)
+						tmpnewchar = tmpnewchar + "分";
+					newchar = newchar + tmpnewchar;
+				}
+			}
+			while (newchar.search("零零") != -1)
+				newchar = newchar.replace("零零", "零");
+			newchar = newchar.replace("亿零万", "亿");
+			newchar = newchar.replace("零亿", "亿");
+			newchar = newchar.replace("亿万", "亿");
+			newchar = newchar.replace("零万", "万");
+			newchar = newchar.replace("零元", "元");
+			newchar = newchar.replace("零角", "");
+			newchar = newchar.replace("零分", "");
+
+			if (newchar.charAt(newchar.length - 1) == "元"
+					|| newchar.charAt(newchar.length - 1) == "角")
+				newchar = newchar + "整"
+			return newchar;
+		}
+	</script>
+
+</body>
+</html>

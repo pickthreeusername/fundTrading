@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>个人基金管理</title>
+<link rel="stylesheet" href="/customer/webjars/bootstrap/4.3.1/css/bootstrap.css">
+<script type="text/javascript" src="/customer/webjars/jquery/3.3.1-2/jquery.js"></script>
+<style>
+	#body{
+		height:900px;
+		width:100%;
+		margin-top:1%;
+		padding-left:12%;
+		text-align:center;
+	}
+	#bodyleft{
+		float:left;
+	}
+	#bodyright{
+		float:left;
+		margin-right:80px;
+		margin-left:20px;
+		width:810px;
+	}
+	#leftmsg{
+		border:1px solid #DCDCDC;
+		height:200px;
+		padding-top:30px;
+		background-color: 	#FFA500;
+		width:250px;
+	}
+	#righttop{
+		border:1px solid #DCDCDC;
+		margin-bottom: 20px;
+		height:200px;
+	}
+	tr{
+		height:35px;
+		line-height: 35px;
+	}
+	#grjjgl{
+		background-color: darkorange;
+	}
+</style>
+</head>
+<body>
+	<div th:include="header :: common"></div>
+	<div th:include="header :: nav"></div>
+	<div id="body">
+		<div id="bodyleft">
+			<div id="leftmsg">
+				<img th:src="@{/images/am_img.jpg}" style="border-radius:50%">
+				<p style="font-size: 25px;color:white;font-family:'黑体'" th:text="${session.loginUser.realName}!=null?'您好，'+${session.loginUser.realName}:'您好'">您好，xx</p>
+			</div>
+			<div class="list-group" style="width:250px">
+				<a href="/customer/personalFund/toPersonal.do" class="list-group-item list-group-item-action" style="background:#FFE7BA">我的资产</a>
+				<a href="/customer/personalFund/toTrade.do" class="list-group-item list-group-item-action">交易记录</a>
+				<a href="/customer/personalFund/toInvest.do" class="list-group-item list-group-item-action">我的定投</a>
+				<a href="/customer/personalFund/toOnWay.do" class="list-group-item list-group-item-action">在途交易</a>
+			</div>
+		</div>
+		<div id="bodyright">
+			<div id="righttop">
+				<h4 style="margin:10px 30px;font-weight: bold;color:#9ca3b4;text-align:left">我的基金资产</h4>
+				<span style="color:#FFA500;font-size:40px;font-weight:600;text-align:left;margin:5px 30px;display:block;font-family: '黑体'" th:text="${m}+'元'"></span>
+				<input type="button" th:onclick="toMarket()" class="btn btn-warning" value="申购" style="width:100px;float:left;margin:5px 30px;background-color:#FFA500;color:white">
+			</div>
+			<input type="hidden" th:value="${size}" id="size">
+			<p id="tips"></p>
+			<div id="rightdown">
+				<table class="table table-striped" style="border:1px solid #eee">
+					<thead>
+						<tr>
+							<td>订单编号</td>
+							<td>基金名称</td>
+							<td>可用份额</td>
+							<td>单位净值</td>
+							<td>日增长率</td>
+							<td>快速操作</td>
+						</tr>
+					</thead>
+					<tr th:each="pfund:${pageInfo.list}">
+						<td th:text="${pfund.orderid}"></td>
+						<td th:text="${pfund.fund.fundname}"></td>
+						<td th:text="${pfund.portion}"></td>
+						<td th:text="${pfund.fund.unitvalue}"></td>
+						<td th:text="${pfund.fund.dayupdown*100}+'%'"></td>
+						<td>
+						<input type="button" th:onclick="buyMore([[${pfund.fund.id}]])" class="btn btn-primary btn-sm" value="买入" style="width:60px;background-color:#FFA500;color:white;border:#FFA500">
+						<input type="button" th:onclick="redeem([[${pfund.orderid}]])" class="btn btn-primary btn-sm" value="赎回" style="width:60px;background-color:white;color:#FFA500;border:1px solid #eee">
+						</td>
+					</tr>
+				</table>
+				<p>共 [[${pageInfo.total}]]条记录 &nbsp;&nbsp; 当前第[[${pageInfo.pageNum}]]页&nbsp;&nbsp;共[[${pageInfo.pages}]]页</p>
+				<div>
+					<ul class="pagination" th:if="${pageInfo.total!=0}" style="margin-left:35%">
+						<li style="margin:10px"><a th:href="@{toPersonal.do(pageNum=1)}">首页</a></li>
+						<li style="margin:10px" th:if="${pageInfo.pageNum==1}" th:class="disabled"><a>上一页</a></li>
+						<li style="margin:10px" th:if="${pageInfo.pageNum>1}"><a th:href="@{toPersonal.do(pageNum=${pageInfo.pageNum-1})}">上一页</a></li>
+						<li style="margin:10px" th:if="${pageInfo.pageNum==pageInfo.pages}" th:class="disabled"><a>下一页</a></li>
+						<li style="margin:10px" th:if="${pageInfo.pageNum!=pageInfo.pages}"><a th:href="@{toPersonal.do(pageNum=${pageInfo.pageNum+1})}">下一页</a></li>
+						<li style="margin:10px"><a th:href="@{toPersonal.do(pageNum=${pageInfo.pages})}">尾页</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:include="footer :: common"></div>
+</body>
+</html>
+<script type="text/javascript">
+	function buyMore(id){
+		location.href="/customer/purchase/toPurchase?id="+id;
+	}
+	
+	function redeem(orderid){
+		location.href="/customer/purchase/toComeBack?orderid="+orderid;
+	}
+	$(function(){
+		var size = $("#size").val();
+		if(size==null||size=='0'){
+			$("#rightdown").hide();
+			$("#tips").html("暂无数据");
+		}else{
+			$("#rightdown").show();
+			$("#tips").html("");
+		}
+	})
+	
+	function toMarket(){
+		location.href="/customer/fundMarket";
+	}
+</script>

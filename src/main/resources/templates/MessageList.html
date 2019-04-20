@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>消息列表</title>
+<link rel="stylesheet" href="/customer/webjars/bootstrap/4.3.1/css/bootstrap.css">
+<script type="text/javascript" src="/customer/webjars/jquery/3.3.1-2/jquery.js"></script>
+<style type="text/css">
+	#xxlb{
+		background-color: darkorange;
+	}
+	#body{
+		height:500px;
+		width:100%;
+		margin-top:20px;
+		padding-left:220px;
+		text-align:center;
+	}
+	#bodytop{
+		text-align: left;
+		padding-left:5px;
+		padding-bottom: 10px;
+	}
+	#page{
+		width:80%;
+	}
+</style>
+</head>
+<body>
+	<div th:include="header :: common"></div>
+	<div th:include="header :: nav"></div>
+	<div id="body">
+		<div id="bodytop">
+			<a href="/customer/toMyAsset.do">我的账户 > </a><span style="color:#FFA500">消息列表</span>
+		</div>
+		<div id="bodydown">
+			<table class="table table-striped" style="border:1px solid #eee;width:80%">
+				<thead>
+					<tr>
+						<td>消息内容</td>
+						<td>消息时间</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tr th:each="msg:${pageInfo.list}">
+					<td th:text="${msg.messagecontent}"></td>
+					<td th:text="${#dates.format(msg.messagedate,'yyyy-MM-dd')}"></td>
+					<td>
+					<input type="button" th:onclick="deleteMsg([[${msg.id}]])" class="btn btn-primary btn-sm" value="删除消息" style="width:80px;background-color:#FFA500;color:white;border:#FFA500">
+					</td>
+				</tr>
+			</table>
+				<div id="page">
+					<p>共 [[${pageInfo.total}]]条记录 &nbsp;&nbsp; 当前第[[${pageInfo.pageNum}]]页&nbsp;&nbsp;共[[${pageInfo.pages}]]页</p>
+					<div>
+						<ul class="pagination" th:if="${pageInfo.total!=0}" style="margin-left:330px">
+							<li style="margin:10px"><a th:href="@{toMessage.do(pageNum=1)}">首页</a></li>
+							<li style="margin:10px" th:if="${pageInfo.pageNum==1}" th:class="disabled"><a>上一页</a></li>
+							<li style="margin:10px" th:if="${pageInfo.pageNum>1}"><a th:href="@{toMessage.do(pageNum=${pageInfo.pageNum-1})}">上一页</a></li>
+							<li style="margin:10px" th:if="${pageInfo.pageNum==pageInfo.pages}" th:class="disabled"><a>下一页</a></li>
+							<li style="margin:10px" th:if="${pageInfo.pageNum!=pageInfo.pages}"><a th:href="@{toMessage.do(pageNum=${pageInfo.pageNum+1})}">下一页</a></li>
+							<li style="margin:10px"><a th:href="@{toMessage.do(pageNum=${pageInfo.pages})}">尾页</a></li>
+						</ul>
+					</div>
+				</div>
+		</div>
+	</div>
+	<div th:include="footer :: common"></div>
+</body>
+</html>
+<script type="text/javascript">
+	function deleteMsg(id){
+		var flag = confirm("确认删除？");
+		if(flag){
+			$.ajax({
+				url:"/customer/messageList/deleteMsg.do",
+				type:"post",
+				data:{id:id},
+				success:function(data){
+					if(data.flag){
+						alert("删除成功");
+						location.href="/customer/messageList/toMessage.do";
+					}else{
+						alert("删除失败");
+					}
+				}
+			})
+		}else{
+			return;
+		}
+		
+	}
+</script>

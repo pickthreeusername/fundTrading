@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<!-- 黄炜 -->
+<meta charset="UTF-8">
+<title>账户取现</title>
+<link rel="stylesheet" th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}">
+<script type="text/javascript" th:src="@{/webjars/jquery/3.3.1-2/jquery.js}"></script>
+</head>
+<style>
+	#zcgl{
+		background-color:darkorange;
+	}
+	#content{
+		background-color:#f9f9f9;
+		whdth:100%;
+		height:600px;
+	}
+	#charge_form{
+		margin:0 14% 0 14%;
+		height:550px;
+		background-color:#fff;
+		border:solid 1px #ddd;
+		padding:5%;
+	}
+</style>
+<script type="text/javascript">
+	//获得几天后的时间
+	function GetDateStr(AddDayCount) { 
+	   var dd = new Date();
+	   dd.setDate(dd.getDate()+AddDayCount);//获取AddDayCount天后的日期
+	   var y = dd.getFullYear(); 
+	   var m = (dd.getMonth()+1)<10?"0"+(dd.getMonth()+1):(dd.getMonth()+1);//获取当前月份的日期，不足10补0
+	   var d = dd.getDate()<10?"0"+dd.getDate():dd.getDate();//获取当前几号，不足10补0
+	   return y+"年"+m+"月"+d+"日"; 
+	}
+	$(function(){
+		//取现方式改变事件
+		$("#cashWay").change(function(){
+			var text = $(this).val();
+			if(text=="2"){
+				$("#dzsj").html("实时到账");
+				$("#btn_cash").html("快速取现");
+				$("#agree_div").show();
+			}else{
+				var date = GetDateStr(3);
+				$("#dzsj").html("将于 "+date+" 24:00:00 之前到账");
+				$("#agree_div").hide();
+				$("#btn_cash").html("普通取现");
+			}
+		})
+		$("#bank").change(function(){
+			if(bank == ""){
+				$("#err1").text("请选择充值银行卡！")
+			}else{
+				$("#err1").text("")
+			}
+		})
+		$("#money").keyup(function(){
+			$("#err2").text("")
+		})
+		//验证取现信息
+		$("#btn_cash").click(function(){
+			var id = $("#bank option:checked").attr("id");
+			//相关验证
+			var bank = $("#bank").val();
+			if(bank == ""){
+				$("#err1").text("请选择取现银行卡！")
+				return;
+			}else{
+				$("#err1").text("")
+			}
+			var money = $("#money").val();
+			var reg = /^([1-9][0-9]*)+(.[0-9]{1,2})?$/
+			if(money == ""){
+				$("#err2").text("请输入充值金额！")
+				return;
+			}else if(money == 0){
+				$("#err2").text("充值金额必须大于零！")
+				return;
+			}else if(!reg.exec(money)){
+				$("#err2").text("金额必须为数字！")
+				return;
+			}else{
+				$("#err2").text("")
+			}
+			var cashWay = $("#cashWay").val();
+			var query =  JSON.stringify({"cardid":id,"money":money,"cashWay":cashWay}); 
+			if($("#agree").is(':checked')){
+				$.post({
+					url:"/customer/checkCash.do",
+					type:"POST",
+					contentType: "application/json;charset=utf-8",
+					data: query,
+					success:function(reg){
+						if(reg=="1"){
+							var cw = $("#cashWay").val();
+							var dzsj = $("#dzsj").text();
+							document.write("<form action='/customer/toCashTwo.do' method='post' name='form1' style='display:none'>");  
+							document.write("<input type='hidden' name='money' value='"+money+"'/>"); 
+							document.write("<input type='hidden' name='cardid' value='"+id+"'/>"); 
+							document.write("<input type='hidden' name='cashWay' value='"+cw+"'/>"); 
+							document.write("<input type='hidden' name='cashTime' value='"+dzsj+"'/>");
+							document.write("</form>");  
+							document.form1.submit(); 
+						}else{
+							$("#err2").text(reg);
+						}
+					}
+				})
+			}else{
+				alert("请阅读并同意《快速到账协议》！")
+			}
+		})
+	})
+</script>
+<body>
+	<!-- 头部 -->
+	<div th:include="header :: common"></div>
+	<!-- 导航栏 -->
+	<div th:include="header :: nav"></div>
+	<!-- 内容 -->
+	<div id="content">
+		<div id="charge_form">
+			<form class="form" method="post" style="font-size:18px;">
+				<div class="form-group row">
+					<label class="col-md-3 text-right">账户可用余额</label>
+					<div class="col-md-8"><span th:text="${asset}==null?'0.00元':${asset.surplus}+'元'" style="color:darkorange;font-weight: bold;"></span></div>
+				</div>
+				<div class="form-group row">
+			      <label for="bank" class="col-md-3 text-right">取现银行卡</label>
+			      <div class="col-md-6">
+			      	<select id="bank" name="bankname" class="form-control form-control-lg">
+			      		<option value="">请选择银行卡</option>
+			      		<option th:each="ubc:${list_ubc}" th:id="${ubc.cardid}" th:text="${ubc.bankCard.bankname}+' | 尾号'+${#strings.substring(ubc.cardid,15,19)}"></option>
+			      	</select>
+			      </div>
+			      <span id="err1" class="col-md-3" style="color:red;"></span>
+			    </div>
+			    <div class="form-group row">
+			      <label for="money" class="col-md-3 text-right">取现金额</label>
+			      <div class="col-md-6">
+			      	<input type="text" class="form-control form-control-lg" id="money" maxlength="6" placeholder="请输入取现金额">
+			      </div>
+			      <span id="err2" class="col-md-3" style="color:red;"></span>
+			    </div>
+			    <div class="form-group row">
+			      <label class="col-md-3 text-right">取现方式</label>
+			      <div class="col-md-6">
+			      	<select id="cashWay" class="form-control form-control-lg">
+			      		<option value="2">快速取现</option>
+			      		<option value="3">普通取现</option>
+			      	</select>
+			      </div>
+			    </div>
+			    <div class="form-group row">
+			    	<label class="col-md-3 text-right">到账时间</label>
+					<span id="dzsj" class="col-md-8 font-weight-bold">实时到账</span>
+			    </div>
+			    <div class="form-group row">
+			    	<label class="col-md-3"></label>
+					<div id="agree_div" class="checkbox col-md-8">
+						<input id="agree" type="checkbox" checked="checked">
+						我已同意阅读<span style="color:darkorange;">《快速到账协议》</span>
+					</div>
+			    </div>
+			    <button id="btn_cash" type="button" class="btn btn-lg col-lg-6" style="background-color:darkorange;color:#fff;margin:2% 20%">快速取现</button>
+			</form>
+		</div>
+	</div>
+	<!-- 底部引用 -->
+	<div th:include="footer :: common"></div>
+</body>
+</html>

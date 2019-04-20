@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<header th:fragment="common">
+		<style type="text/css">
+			html{
+				font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
+			}
+			a {
+				color: black;
+			}
+			a:hover {
+				color: orange;
+				text-decoration: none;
+			}
+			#header {
+				margin-top: -16px;
+			}
+			ul li{
+				list-style: none;
+			}
+			#head{
+				background-color: #F5F5F5;
+				height: 30px;
+				line-height: 30px;
+				margin: 0;
+			}
+			#head ul{
+				margin-left: 50%;
+			}
+			#head ul li{
+				float: left;
+				margin-left: 10px;
+				margin-right: 10px;
+				font-size: 12px;
+			}
+			li a{
+				text-decoration: none;
+			}
+			#top{
+				margin-top: -18px;
+				height: 90px;
+				line-height: 80px;
+			}
+			#listone li{
+				float: left;
+				margin-left: 150px;
+			}
+			#listtwo{
+				margin-right: 100px;
+			}
+			.font_class{
+				margin-top:4px;
+				float: right;
+				margin-right: 110px;
+				color:#555;
+				font-family: 'Consolas';
+				font-weight:550;
+				font-size:17px;
+			 } 
+		</style>
+		<div id="header">
+			<div id="head">
+				<ul>
+					<li>微信 </li>
+					<li>|</li>
+					<li>微博</li>
+					<li>|</li>
+					<li>在线客服</li>
+					<li>|</li>
+					<li>联系我们：666-888-6688</li>
+					<li>|</li>
+					<li>
+					<div th:if="${session.loginUser} ne null">
+						<span id="user_info" th:text="${session.loginUser.realName}==null?'您好，用户':'您好，'+${session.loginUser.realName}"></span>
+						<a id="exit" href="/customer/user/logout.do"> [ 安全退出  ]</a></div>
+					<div th:if="${session.loginUser} eq null">
+						<a id="toLogin" href="/customer/user/toLogin.do">[ 登录  ]</a>&nbsp;
+						<a href="/customer/user/toRegister.do">[ 注册  ]</a>
+					</div>
+					</li>
+				</ul>
+			</div>
+			<div id="top">
+				<ul id="listone">
+					<li><img th:src="@{/images/logo.png}" style="height: 70px;margin-top:-12px;"></li>
+				</ul>
+				<ul id="listtwo">
+					<li><a class="font_class" href="/customer/question">常见问题</a></li>
+					<li><a class="font_class" href="/customer/fundMarket">基金市场</a></li>
+					<li><a class="font_class" href="/customer/toMyAsset.do">我的账户</a></li>
+					<li><a class="font_class" href="/customer/index">首页</a></li>
+				</ul>
+			</div>
+		</div>
+	</header>
+	<!-- 我的账户导航栏 -->
+	<header th:fragment="nav">
+		<style>
+		.nav{
+			margin:0;
+			background-color: orange;
+			height:45px;
+		}
+		#nav_ul {
+			float:left;
+			margin-left: 150px;
+			height:50px;
+		}
+		#nav_ul li {
+			float: left;
+			line-height: 45px;
+		}
+		#nav_ul li a{
+			color: #fff;
+			font-weight: 500;
+			display: block;
+			padding: 0px 25px 0px;
+		}
+		#nav_ul li a:hover{
+			background-color: darkorange;
+		}
+		</style>
+		<div class="nav">
+			<ul id="nav_ul">
+				<li id="zcgl"><a href="/customer/toMyAsset.do">资产管理</a></li>
+				<li id="grjbxx"><a href="/customer/info/toInfo.do">个人基本信息</a></li>
+				<li id="zhaqgl"><a href="/customer/security/toSecurityMg.do">账户安全管理</a></li>
+				<li id="grjjgl"><a href="/customer/personalFund/toPersonal.do">个人基金管理</a></li>
+				<li id="yhkgl"><a href="/customer/bank/cards.do">银行卡管理</a></li>
+				<li id="xxlb"><a href="/customer/messageList/toMessage.do">消息列表</a></li>
+			</ul>
+		</div>
+	</header>
+</html>

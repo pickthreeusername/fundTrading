@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>personal Info</title>
+<link rel="stylesheet" href="/customer/webjars/bootstrap/4.3.1/css/bootstrap.css">
+<script type="text/javascript" src="/customer/webjars/jquery/3.3.1-2/jquery.js"></script>
+<style>
+	#main{
+		height:500px;
+		padding-top:20px;
+		
+	}
+	/* a:link{
+		color:#6699FF;
+	} */
+	.lableClass{
+	display: inline-block;
+	width: 140px;
+}
+	.input_div{
+		height:30px;
+		line-height:30px;
+		margin-top:40px;
+	}
+	.input_class{
+		border-radius:5px;
+		background-color:white;
+		width:500px;
+		border:none;
+		color:#CCCCCC;
+		font-size: 16px;
+		font-family:"微软雅黑" ;
+		
+	}
+	.fontClass{
+	color:#666666;
+	font-size: 16px;
+	font-family:"微软雅黑" ;
+}
+	span{
+		cursor:pointer;
+	}
+	#leftNav{
+		margin-left:100px;
+		width:310px;
+		float:left;
+	}
+	#right_content{
+		width:820px;
+		margin-left:450px;
+		border:1px solid #CCCCCC;
+		height:400px;
+		padding-left:30px
+	
+	}
+</style>
+</head>
+<body>
+	<div th:include="header :: common"></div>
+	<div th:include="header :: nav"></div>
+	<div id="main" >
+		<div id="leftNav">
+				<div th:include="securityNav :: nav"></div>
+		</div>
+			<div id="right_content"  class="fontClass" th:object="${session.loginUser}">
+				<div class="input_div">
+					<label class="lableClass">实名认证</label>
+					<input type="text" class="input_class" disabled th:value="*{idCard}?'实名认证成功，你可以购买产品啦！':'快速完成实名认证，你就可以购买产品啦!'"/>
+					<a  th:if="*{idCard == null}" th:href="@{/security/toIdentityVerify.do}"  style="color:#6699FF;">[&nbsp;立即认证&nbsp;]</a>
+				</div>
+				<div class="input_div">
+					<label class="lableClass">手机验证码保护</label>
+					<input type="text" class="input_class" value="账户变动，特殊交易，需要输入手机验证码验证。" disabled />
+					<a href="/customer/security/toAlterPhone.do" style="color:#6699FF;">[&nbsp;修改手机&nbsp;]</a>
+				</div>
+				<div class="input_div">
+					<label class="lableClass">登录密码保护</label>
+					<input type="text" class="input_class" value="需要输入高强度的密码，数字、字母及符号等。"  disabled/>
+					<a href="/customer/security/toAlterPassword.do" style="color:#6699FF;">[&nbsp;修改&nbsp;]</a>
+				</div>
+				<div class="input_div">
+					<label class="lableClass">交易密码保护</label>
+					<input type="text" class="input_class" value="所有资金交易需要输入交易密码完成双重认证。"  disabled/>
+					<a th:if="*{padPay}"  href="/customer/security/toAlterTransCode.do" style="color:#6699FF;">[&nbsp;修改&nbsp;]</a>
+					<a  th:if="*{padPay == null}" th:href="*{idCard}?@{/security/toSetTransCode.do}:@{/security/toIdentityVerify.do}" style="color:#6699FF;">[&nbsp;立即开启&nbsp;]</a>
+				</div>
+				
+				
+			</div>
+	
+	</div>
+	<div th:include="footer :: common"></div>
+</body>
+<script type="text/javascript">
+		$(function(){
+			$("#tools").addClass("bg_red");
+			
+		})
+	</script>
+</html>
+

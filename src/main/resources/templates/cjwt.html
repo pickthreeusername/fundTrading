@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet"
+	th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}">
+</head>
+<body>
+	<div th:include="header :: common"></div>
+	<hr>
+	<!-- <button id="bnt01" onclick="a01()" type="button"
+		class="btn btn-warning btn-lg btn-block"
+		style="width: 400px; position: relative; left: 400px">什么是一对多特定客户资产管理计划？</button>
+	<br>
+	<div id="d01" style="display: none;">
+		<p style="width: 1000px; position: relative; left: 400px">这就需要我们对于基金有一定的了解吧!开放式基金并不是所有人都适合买的，那么，哪些投资者适合购买开放式基金呢？我们一起来看看吧!
+
+			一、什么是开放式基金？ 开放式基金适合四类投资者购买： 1、把证券投资作为副业，又没有时间关顾的投资者。
+			一般参与证券市场的人其实都有自己的工作，这属于“兼职”，而证券交易的时间往往又是在一般大家上班的时间，所以选择证券投资的人可以把基金交给专业的基金公司代为管理。
+
+			2、有意进行证券投资，但缺乏证券知识的投资者。
+			大多数的投资者对于证券的知识还是不那么了解的，所以他们在投资的时候往往有些盲目，这个时候其实也是可以交给专业的基金公司来运作的。
+
+			3、风险能力承受能力较低的证券投资者。
+			经常在证券市场活跃的很多都是小额投资者，如果他们把资金集中在一、二只股票上，风险其实挺大的。但是如果他们投资的过于分散，又会花费太多的精力，基金其实可以将小额资产汇聚成大额的资金，这样投资者可以进行自由的组合投资，既规避了风险，又方便了管理。
+
+			4、期望获取较为长期稳定收益、不追求暴富的投资者。
+			不同的基金投资的分割也就不同，但是还是长期理性的投资比较好。可能它不会一下子就获利很多，但是它却是一个长期的获利，比较的具有稳定性。
+
+			二、什么是开放式基金？ 开放式基金的购买：
+			因为开放式基金是通过基金管理公司进行开户的，所以只需要带上自己的身份证复印件，就可以去办理申购、赎回该基金管理公司里的任意基金。
+			1、已在证券部开有资金账户： (1)身份证原件及复印件; (2)填写开放式基金开户申请表(无开户费)。 2、没有在证券部开有资金账户：
+			(1)开户人身份证原件及复印件两张以上; (2)活期存折首页复印件一张或银行借记卡正面复印件一张; (3)填写开放式基金开户申请表。
+
+			什么是开放式基金？现在你了解了吧？哪些投资者适合购买开放式基金？投资者需要对自身的情况进行一个分析，然后看自己是否适合购买开放式基金，只有这样才能避免在基金投资中走弯路。</p>
+	</div>
+	<button type="button" onclick="a02()"
+		class="btn btn-warning btn-lg btn-block"
+		style="width: 400px; position: relative; left: 400px">不同的目的如何选择基金？</button>
+	<br>
+	<div id="d02" style="display: none;">
+		<p style="width: 1000px; position: relative; left: 400px">1、保本型投资者的选择方式；
+			通过选择货币基金，可以获得和活期存款一样的灵活性，但同时能获得远高于活期的收益。可选择，债券型基金，保本型基金，分级基金的A类份额，该类产品总体波动更小，相对保本型投资人更适合。
+			2、趋势型投资者的选择方式；
+			可选择指数型基金，包括沪深300指数基金，不同的指数类型对应的波动不同，不过从历史的收益来看，中小盘指数更优于大盘指数。
+			3、懒惰型投资者的选择方式； 可选择定投债券型基金或者定投指数型基金。基金的自动化交易丰富，灵活，给了很多懒惰型跟随性投资者很多方式。
+			4、高净值型的投资方式； 可选择专户基金产品，通过更高的参与门槛，获得高参与门槛的投资红利。</p>
+	</div>
+	<button type="button" onclick="a03()"
+		class="btn btn-warning btn-lg btn-block"
+		style="width: 400px; position: relative; left: 400px">投资基金应有哪些准备？</button>
+	<br>
+	<div id="d03" style="display: none;">
+		<p style="width: 1000px; position: relative; left: 400px">投资基金前应做好充分的准备工作：制订切实可行的投资目标；了解自身风险承受能力和承受意愿；准备资金进行长期投资；选择有实力的基金管理公司；选择合适的基金投资品种；
+			选择合适的交易渠道；选择合适的投资方式；选择合适的投资时机。</p>
+	</div>
+	<button type="button" onclick="a04()"
+		class="btn btn-warning btn-lg btn-block"
+		style="width: 400px; position: relative; left: 400px">新手如何迈出投资基金第一步？</button>
+	<br>
+	<div id="d04" style="display: none;">
+		<p style="width: 1000px; position: relative; left: 400px">对于没有投资经验，或者投资经验缺乏的新手来说，可以选择定期定额的方式投资基金。特别是对于花费较高的年轻人来说，这种类似于“强制储蓄”的投资方式可以帮助您养成投资的良好习惯，也是踏出理财的第一步。</p>
+	</div>
+	<button type="button" onclick="a05()"
+		class="btn btn-warning btn-lg btn-block"
+		style="width: 400px; position: relative; left: 400px">定期定额投资方式有哪些优点？</button>
+	<br>
+	<div id="d05" style="display: none;">
+		<p style="width: 1000px; position: relative; left: 400px">1、定期投资，积少成多。您可根据自己的收入水平和理财计划定期投资，每月最低几百元，通过长期投资以及红利再投的复利效应，让时间为您积累财富。
+			2、自动扣款，手续简便。您只需去基金代销机构，如银行，办理一次性的手续，今后每期的扣款申购均自动进行。
+			3、平均成本，分散风险。定期定额投资由于每月投资金额固定，当基金净值上涨时，买入的基金份额少一些；当基金净值下跌时，买入的基金份额就会多一些，这样就很自然地形成了“逢高减筹，逢低加码”的投资策略，获得平均的成本，也免去选择投资时机的麻烦，分散投资风险。</p>
+	</div>
+	<button type="button" onclick="a06()"
+		class="btn btn-warning btn-lg btn-block"
+		style="width: 400px; position: relative; left: 400px">投资基金和投资股票有何不同？</button>
+	<br>
+	<div id="d06" style="display: none;">
+		<p style="width: 1000px; position: relative; left: 400px">基金和股票一样，都属于大众投资工具，也都可以预期较高的回报率。但从投资运作、资金门槛、风险水平三个方面来看，还是有很大的不同，其主要差别有：1)股票是由自己来操作管理，基金则是委托专家来管理。2)基金投资的资金门槛较低，以国内开放式基金而言，单笔申购最低金额通常只要1000元，而定期定额的投资方式则更低。3)基金的投资范围比个人投资股票更广，能分散风险。</p>
+	</div>
+	<button type="button" onclick="a07()"
+		class="btn btn-warning btn-lg btn-block"
+		style="width: 400px; position: relative; left: 400px">货币基金是否完全没有风险？</button>
+	<br>
+	<div id="d07" style="display: none;">
+		<p style="width: 1000px; position: relative; left: 400px">货币市场基金并不承诺本金任何时候都不发生亏损，也不保证最低收益率。一般来讲，在同时满足下列两个条件时，货币市场基金可能会发生本金亏损：一是短期内市场收益率大幅上升，导致券种价格大幅下跌；二是货币基金同时发生大额赎回，不能将价格下跌的券种持有到期，抛售券种后造成了实际亏损。据有关测算表明，单日货币市场基金发生本金亏损的可能性很小（0.06117%），如持有一周或者一月，则本金损失的概率接近于0。随着持有期的延长，由于市场风险所导致的亏损概率会降到非常低。而国内货币基金按规定不得投资股票、可转换债券、AAA级以下的企业债等品种，因此发生信用风险的概率更低。</p>
+	</div> -->
+	<div class="accordion" id="accordionExample">
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h2 class="mb-0">
+        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          什么是一对多特定客户资产管理计划？
+        </button>
+      </h2>
+    </div>
+
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+      <div class="card-body">
+      这就需要我们对于基金有一定的了解吧!开放式基金并不是所有人都适合买的，那么，哪些投资者适合购买开放式基金呢？我们一起来看看吧!
+ <br>
+			一、什么是开放式基金？ 开放式基金适合四类投资者购买： 1、把证券投资作为副业，又没有时间关顾的投资者。
+			一般参与证券市场的人其实都有自己的工作，这属于“兼职”，而证券交易的时间往往又是在一般大家上班的时间，所以选择证券投资的人可以把基金交给专业的基金公司代为管理。
+ <br>
+			2、有意进行证券投资，但缺乏证券知识的投资者。
+			大多数的投资者对于证券的知识还是不那么了解的，所以他们在投资的时候往往有些盲目，这个时候其实也是可以交给专业的基金公司来运作的。
+ <br>
+			3、风险能力承受能力较低的证券投资者。
+			经常在证券市场活跃的很多都是小额投资者，如果他们把资金集中在一、二只股票上，风险其实挺大的。但是如果他们投资的过于分散，又会花费太多的精力，基金其实可以将小额资产汇聚成大额的资金，这样投资者可以进行自由的组合投资，既规避了风险，又方便了管理。
+ <br>
+			4、期望获取较为长期稳定收益、不追求暴富的投资者。
+			不同的基金投资的分割也就不同，但是还是长期理性的投资比较好。可能它不会一下子就获利很多，但是它却是一个长期的获利，比较的具有稳定性。
+ <br>
+			二、什么是开放式基金？ 开放式基金的购买：
+			因为开放式基金是通过基金管理公司进行开户的，所以只需要带上自己的身份证复印件，就可以去办理申购、赎回该基金管理公司里的任意基金。
+ <br>			1、已在证券部开有资金账户： (1)身份证原件及复印件; (2)填写开放式基金开户申请表(无开户费)。 2、没有在证券部开有资金账户：
+			(1)开户人身份证原件及复印件两张以上; (2)活期存折首页复印件一张或银行借记卡正面复印件一张; (3)填写开放式基金开户申请表。
+ <br>
+			什么是开放式基金？现在你了解了吧？哪些投资者适合购买开放式基金？投资者需要对自身的情况进行一个分析，然后看自己是否适合购买开放式基金，只有这样才能避免在基金投资中走弯路。
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h2 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          不同的目的如何选择基金？
+        </button>
+      </h2>
+    </div>
+    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+      <div class="card-body">
+            1、保本型投资者的选择方式；
+			通过选择货币基金，可以获得和活期存款一样的灵活性，但同时能获得远高于活期的收益。可选择，债券型基金，保本型基金，分级基金的A类份额，该类产品总体波动更小，相对保本型投资人更适合。
+<br>			2、趋势型投资者的选择方式；
+			可选择指数型基金，包括沪深300指数基金，不同的指数类型对应的波动不同，不过从历史的收益来看，中小盘指数更优于大盘指数。
+<br>			3、懒惰型投资者的选择方式； 可选择定投债券型基金或者定投指数型基金。基金的自动化交易丰富，灵活，给了很多懒惰型跟随性投资者很多方式。
+<br>			4、高净值型的投资方式； 可选择专户基金产品，通过更高的参与门槛，获得高参与门槛的投资红利。
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header" id="headingThree">
+      <h2 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          投资基金应有哪些准备？
+        </button>
+      </h2>
+    </div>
+    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+      <div class="card-body">
+       投资基金前应做好充分的准备工作：制订切实可行的投资目标；了解自身风险承受能力和承受意愿；准备资金进行长期投资；选择有实力的基金管理公司；选择合适的基金投资品种；
+			选择合适的交易渠道；选择合适的投资方式；选择合适的投资时机。      </div>
+    </div>
+  </div>
+    <div class="card">
+    <div class="card-header" id="headingThree1">
+      <h2 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree1" aria-expanded="false" aria-controls="collapseThree1">
+          新手如何迈出投资基金第一步？
+        </button>
+      </h2>
+    </div>
+    <div id="collapseThree1" class="collapse" aria-labelledby="headingThree1" data-parent="#accordionExample">
+      <div class="card-body">
+        对于没有投资经验，或者投资经验缺乏的新手来说，可以选择定期定额的方式投资基金。特别是对于花费较高的年轻人来说，这种类似于“强制储蓄”的投资方式可以帮助您养成投资的良好习惯，也是踏出理财的第一步。      </div>
+    </div>
+  </div>
+    <div class="card">
+    <div class="card-header" id="headingThree2">
+      <h2 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree2" aria-expanded="false" aria-controls="collapseThree2">
+          定期定额投资方式有哪些优点？
+        </button>
+      </h2>
+    </div>
+    <div id="collapseThree2" class="collapse" aria-labelledby="headingThree2" data-parent="#accordionExample">
+      <div class="card-body">
+      1、定期投资，积少成多。您可根据自己的收入水平和理财计划定期投资，每月最低几百元，通过长期投资以及红利再投的复利效应，让时间为您积累财富。
+		<br> 	2、自动扣款，手续简便。您只需去基金代销机构，如银行，办理一次性的手续，今后每期的扣款申购均自动进行。
+		<br> 	3、平均成本，分散风险。定期定额投资由于每月投资金额固定，当基金净值上涨时，买入的基金份额少一些；当基金净值下跌时，买入的基金份额就会多一些，这样就很自然地形成了“逢高减筹，逢低加码”的投资策略，获得平均的成本，也免去选择投资时机的麻烦，分散投资风险。     </div>
+    </div>
+  </div>
+    <div class="card">
+    <div class="card-header" id="headingThree3">
+      <h2 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree3" aria-expanded="false" aria-controls="collapseThree3">
+          投资基金和投资股票有何不同？
+        </button>
+      </h2>
+    </div>
+    <div id="collapseThree3" class="collapse" aria-labelledby="headingThree3" data-parent="#accordionExample">
+      <div class="card-body">
+       基金和股票一样，都属于大众投资工具，也都可以预期较高的回报率。但从投资运作、资金门槛、风险水平三个方面来看，还是有很大的不同，其主要差别有：1)股票是由自己来操作管理，基金则是委托专家来管理。2)基金投资的资金门槛较低，以国内开放式基金而言，单笔申购最低金额通常只要1000元，而定期定额的投资方式则更低。3)基金的投资范围比个人投资股票更广，能分散风险。      </div>
+    </div>
+  </div>
+    <div class="card">
+    <div class="card-header" id="headingThree4">
+      <h2 class="mb-0">
+        <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree4" aria-expanded="false" aria-controls="collapseThree4">
+          货币基金是否完全没有风险？
+        </button>
+      </h2>
+    </div>
+    <div id="collapseThree4" class="collapse" aria-labelledby="headingThree4" data-parent="#accordionExample">
+      <div class="card-body">
+       货币市场基金并不承诺本金任何时候都不发生亏损，也不保证最低收益率。一般来讲，在同时满足下列两个条件时，货币市场基金可能会发生本金亏损：一是短期内市场收益率大幅上升，导致券种价格大幅下跌；二是货币基金同时发生大额赎回，不能将价格下跌的券种持有到期，抛售券种后造成了实际亏损。据有关测算表明，单日货币市场基金发生本金亏损的可能性很小（0.06117%），如持有一周或者一月，则本金损失的概率接近于0。随着持有期的延长，由于市场风险所导致的亏损概率会降到非常低。而国内货币基金按规定不得投资股票、可转换债券、AAA级以下的企业债等品种，因此发生信用风险的概率更低。      </div>
+    </div>
+  </div>
+</div>
+	<!-- 底部引用 -->
+	<div th:include="footer :: common"></div>
+
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script type="text/javascript"
+		th:href="@{/asserts/js/jquery-3.2.1.slim.min.js}"
+		src="asserts/js/jquery-3.2.1.slim.min.js"></script>
+	<script type="text/javascript" th:href="@{/asserts/js/popper.min.js}"
+		src="asserts/js/popper.min.js"></script>
+	<script type="text/javascript"
+		th:href="@{/asserts/js/bootstrap.min.js}"
+		src="asserts/js/bootstrap.min.js"></script>
+	<!-- Icons -->
+	<script type="text/javascript" th:href="@{/asserts/js/feather.min.js}"
+		src="asserts/js/feather.min.js"></script>
+	<!-- Graphs -->
+	<script type="text/javascript" th:href="@{/asserts/js/Chart.min.js}"
+		src="asserts/js/Chart.min.js"></script>
+	<script type="text/javascript" src="scripts/jquery-3.3.1.js"></script>
+	<script>
+/* 		function a01() {
+			$("#d01").toggle();
+		}
+		function a02() {
+			$("#d02").toggle();
+		}
+		function a03() {
+			$("#d03").toggle();
+		}
+		function a04() {
+			$("#d04").toggle();
+		}
+		function a05() {
+			$("#d05").toggle();
+		}
+		function a06() {
+			$("#d06").toggle();
+		}
+		function a07() {
+			$("#d07").toggle();
+		} */
+	</script>
+</body>
+</html>

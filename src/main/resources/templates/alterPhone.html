@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>alter mobilePhone</title>
+<link rel="stylesheet" href="/customer/webjars/bootstrap/4.3.1/css/bootstrap.css">
+<script type="text/javascript" src="/customer/webjars/jquery/3.3.1-2/jquery.js"></script>
+<script type="text/javascript" src="/customer/scripts/securityFun.js"></script>
+<style>
+	#main{
+		height:500px;
+		padding-top:20px;
+		background-color:#F5F5F5;
+	}
+	
+	.tip_class{
+		color:red;
+		padding-left:20px;
+	}
+	.lableClass{
+	display: inline-block;
+	width: 110px;
+}
+	.input_div{
+		height:30px;
+		line-height:30px;
+		margin-top:30px;
+	}
+	.input_class{
+		border-radius:5px;
+		background-color:white;
+		width:200px;
+		border:1px solid #CCCCCC;
+		color:#666666;
+		font-size: 16px;
+		font-family:"微软雅黑" ;
+		
+	}
+	.fontClass{
+	color:#666666;
+	font-size: 16px;
+	font-family:"微软雅黑" ;
+}
+	span{
+		cursor:pointer;
+		font-size: 14px;
+		display: inline-block;
+		height:30px;
+		line-height:30px;
+	}
+	.next_btn{
+		border-radius:5px;
+		background-color:#FF7800;
+		width:200px;
+		border:none;
+		color:white;
+		font-size: 16px;
+		font-family:"微软雅黑" ;
+		margin-left:100px;
+		cursor:pointer;
+		margin-top:20px;
+	}
+	#leftNav{
+		width:310px;
+		float:left;
+		margin-left:100px;
+	}
+	.right_content{
+		width:700px;
+		margin-left:450px;
+		border:1px solid #CCCCCC;
+		height:400px;
+		padding-left:30px;
+		background-color:white;
+	}
+		.getCodeOrange{
+		background-color:white;
+		border:1px solid #FF7800;
+		width:130px;
+		color:#FF7800;
+		border-radius:5px;
+		outline:none;
+	}
+	.disable_btn{
+		font-family:"微软雅黑" ;
+		color:#999999;
+		background-color:#F5F5F5;
+		border:1px solid gainsboro;
+		font-size:14px;
+	}
+	#setPhone,#success{
+		display:none;
+	} 
+	#success{
+		margin-top:30px;
+		font-size:20px;
+		font-weight:bolder;
+		color:#FF7800;
+		padding-left:290px;
+		display:none;
+	}
+</style>
+</head>
+<body>
+	<div th:include="header :: common"></div>
+	<div th:include="header :: nav"></div>
+	
+	<div id="main" >
+			<div id="leftNav">
+				<div th:include="securityNav :: nav"></div>
+			</div>
+			<div class="right_content fontClass" id="checkPhone">
+				<div class="input_div">
+					<input type="text" class="input_class" value="修改手机号，需要验证您的原手机" disabled style="color:#CCCCCC;font-size: 16px;border:none;width:330px"/>
+				</div>
+				<div class="input_div">
+					<label class="lableClass">原手机号码</label>
+					<input type="text" class="input_class" disabled th:value = "${session.mobileMe}" style="border:none"/>
+				</div>
+				<div class="input_div">
+					<label class="lableClass">短信校验码</label>
+					<input type="text" class="input_class" id="phoneCode1" />
+					<input type="button" id="getPhoneCode1" class="getCodeOrange" style="width:130px;border-radius:5px;font-size:14px" value="获取校验码"/>
+					<span class="tip_class" id="phoneCodeTip1" style="color:red"></span>
+				</div>
+				<div class="input_div">
+					<input type="button" id="nextStep" class="next_btn" value="下一步" >
+				</div>
+			</div>
+			<div class="right_content fontClass" id="setPhone">
+				<div id="setPhoneContent">
+				
+					<div class="input_div">
+						<input type="text" class="input_class" value="请输入新的手机号码" disabled style="color:#CCCCCC;font-size: 16px;border:none;width:330px"/>
+					</div>
+					<div class="input_div">
+						<label class="lableClass" >新手机号</label>
+						<input type="text" class="input_class" id="phone" />
+						<span class="tip_class" id="phoneTip" style="color:red"></span>
+					</div>
+					<div class="input_div">
+						<label class="lableClass">短信校验码</label>
+						<input type="text" class="input_class" id="phoneCode2"/>
+						<input type="button" id="getPhoneCode2" class="getCodeOrange" style="width:130px;border-radius:5px;font-size:14px" value="获取校验码"/>
+						<span class="tip_class" id="phoneCodeTip2" style="color:red"></span>
+					</div>
+					<div class="input_div">
+						<input type="button" class="next_btn" value="提交" id="confirm">
+					</div>
+				</div>
+				<div id="success">
+					修改成功
+				</div>
+			</div>
+			
+	</div>
+	<div th:include="footer :: common"></div>
+</body>
+<script type="text/javascript">
+		$(function(){
+			var code1Click = false;
+			var code2Click = false;
+			$("#alterPhone").addClass("bg_red");
+			$("#getPhoneCode1").click(function(){
+				sendPhoneCode('0','#getPhoneCode1','#phoneCodeTip1');
+				code1Click = true;
+			})
+			$("#nextStep").click(function(){
+				var phoneCode = $("#phoneCode1").val();
+				if (code1Click == false){
+					$("#phoneCodeTip1").html("点击获取短信校验码");
+				}else if (phoneCode == "" || phoneCode.trim() == ""){
+					$("#phoneCodeTip1").html("请输入短信校验码");
+				}else{
+					verifyPhoneCode("0",phoneCode,"#phoneCodeTip1","#checkPhone","#setPhone","0");
+				}
+			})
+			var regPhone = /^[1](([3][0-9])|([4][5-9])|([5][0-3,5-9])|([6][5,6])|([7][0-8])|([8][0-9])|([9][1,8,9]))[0-9]{8}$/;
+			$("#getPhoneCode2").click(function(){
+				$("#phoneTip").html("");
+				var phone = $("#phone").val();
+				if (phone !="" && regPhone.test(phone)){
+					$("#phoneCodeTip2").html("");
+						//检验手机号是否存在
+						$.ajax({
+							async : false,
+							url : "/customer/user/checkPhone.do",
+							type : "post",
+							data : {"phone":phone},
+							success : function(msg){
+								if (msg != 0){
+									//已存在
+									$("#phoneTip").html("该手机号已注册！");
+								}else{
+									$("#phoneTip").html("");
+									//不存在允许发送验证码
+									sendPhoneCode(phone,'#getPhoneCode2','#phoneCodeTip2');
+									code2Click = true;
+								}
+							}
+						});
+					}else{
+						$("#phoneTip").html("请输入正确的手机号");
+					}
+			})
+			$("#confirm").click(function(){
+				var phone = $("#phone").val();
+				var phoneCode = $("#phoneCode2").val();
+				if (regPhone.test(phone) == false){
+					$("#phoneTip").html("请输入正确的手机号");
+				}else if (code2Click == false){
+					$("#phoneCodeTip2").html("点击获取验证码");
+				}else if (phoneCode =="" || phone.trim()==""){
+					$("#phoneCodeTip2").html("请输入验证码");
+				}else{
+					//比对验证码
+					$.ajax({
+						url : "/customer/security/updatePhone.do",
+						type : "post",
+						data : {"phone":phone, "phoneCode":phoneCode },
+						success : function(msg){
+							if (msg == 1){
+								//成功修改
+								$("#setPhoneContent").hide();
+								$("#success").show();
+								toSecurityMg();
+							}else if(msg == -1){
+								alert("update fail");
+							}else{
+								$("#phoneCodeTip2").html("短信验证码无效！")
+							}
+						}
+					})
+				}
+				
+			})
+		})
+	</script>
+</html>

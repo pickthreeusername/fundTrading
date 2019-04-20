@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet"
+	th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}">
+<link rel="stylesheet"
+	th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}">
+<script type="text/javascript"
+	th:src="@{/webjars/jquery/3.3.1-2/jquery.js}"></script>
+<script type="text/javascript"
+	th:src="@{/webjars/jquery/3.3.1-2/jquery.min.js}"></script>
+<script type="text/javascript"
+	th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}"></script>
+<script type="text/javascript"
+	th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
+<style>
+#a:hover {
+	color: white
+}
+</style>
+<script type="text/javascript">
+$(function(){
+	$("#buy").click(function() {
+		location.href = "/customer/purchase/toPurchase?id="+ $(this).val();
+	})
+	/* $("#timeBuy").click(function() {
+		alert($(this).val())
+	location.href = "/customer/purchaseTiming/toPurchaseTiming?id="+ $(this).val();
+	}) */
+})
+
+</script>
+</head>
+<body>
+	<div th:insert="header::common"></div>
+
+	<div class="container">
+
+		<div class="jumbotron" style="background-color: orange;">
+			<h2 style="color: white; position: relative; top: -20px">
+				[[${fund.fundname}]] <span
+					style="font-size: 18px; font-weight: bold;">(基金代码:[[${fund.fundid}]])</span>
+			</h2>
+			<div style="position: relative; left: 100px">
+
+				<span style="font-weight: bold; font-size: 20px"; >净值 </span>
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <span
+					style="font-weight: bold; font-size: 20px";>涨跌幅</span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+				<span style="font-weight: bold; font-size: 20px"; >累计涨跌幅</span>
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <span
+					style="font-weight: bold; font-size: 20px";> 风险等级</span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+				<span style="font-weight: bold; font-size: 20px"; > 投资起点</span>
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <span
+					style="font-weight: bold; font-size: 20px";>管理费率</span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			</div>
+			<hr class="my-4">
+			<div style="position: relative; left: 100px">
+				<span style="font-weight: bold; font-size: 20px"
+					th:text="${fund.unitvalue}">净值 </span>
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <span
+					style="font-weight: bold; font-size: 20px"
+					th:text="${fund.dayupdown}+'%'">涨跌幅</span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+				<span style="font-weight: bold; font-size: 20px"
+					th:text="${fund.totalupdown}+'%'">累计涨跌幅</span>
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <span
+					style="font-weight: bold; font-size: 20px"
+					th:text="${fund.fundrisk.fundriskname}"> 风险等级</span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+				<span style="font-weight: bold; font-size: 20px"
+					th:text="${fund.startpoint}+'元'"> 投资起点</span>
+				&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <span
+					style="font-weight: bold; font-size: 20px"
+					th:text="${fund.managerate}+'%'">管理费率</span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+			</div>
+			<p class="lead"></p>
+			<button type="button"  class="btn btn-danger" id="buy"
+				style="position: relative; font-weight: bold; width: 200px; left: 420px; top: 20px" th:value="${fund.id}">立即购买
+			</button>
+			<a 
+				style="position: relative; font-weight: bold; width: 200px; left: 420px; top: 20px"  th:href="@{/purchaseTiming/toPurchaseTiming?id=}+${fund.id}"><span id="timeBuy"	>我要定投</span></a>
+
+		</div>
+		<h2 style="color: maroon; position: relative; top: -20px">基金特色</h2>
+		<dl class="row">
+			<dt class="col-sm-3" style="font-size: 20px">
+				<p>投资建议</p>
+			</dt>
+			<dd class="col-sm-9" th:text="${fund.advice}"
+				style="font-weight: bold;"></dd>
+			<dt class="col-sm-3" style="font-size: 20px">
+				<p>基金管理人</p>
+			</dt>
+			<dd class="col-sm-9" th:text="${fund.fundmanager}"
+				style="font-weight: bold;"></dd>
+			<dt class="col-sm-3" style="font-size: 20px">
+				<p>成立时间</p>
+			</dt>
+			<dd class="col-sm-9"
+				th:text="${#dates.format(fund.establishdate,'yyyy-MM-dd')}"
+				style="font-weight: bold;"></dd>
+			<dt class="col-sm-3" style="font-size: 20px">
+				<p>基金规模</p>
+			</dt>
+			<dd class="col-sm-9" th:text="${fund.totalscale}+'万元'"
+				style="font-weight: bold;"></dd>
+			<dt class="col-sm-3" style="font-size: 20px">
+				<p>申购赎回费率</p>
+			</dt>
+			<dd class="col-sm-9" th:text="${fund.traderate}+'%'"
+				style="font-weight: bold;"></dd>
+			<dt class="col-sm-3" style="font-size: 20px">
+				<p>基金投资目标</p>
+			</dt>
+			<dd class="col-sm-9" th:text="${fund.fundgoal}"
+				style="font-weight: bold;"></dd>
+		</dl>
+	</div>
+	<div style="height: 260px"></div>
+	<div th:insert="footer::common"></div>
+</body>
+</html>

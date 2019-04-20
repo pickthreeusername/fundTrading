@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>alter trading code</title>
+<link rel="stylesheet" href="/customer/webjars/bootstrap/4.3.1/css/bootstrap.css">
+<script type="text/javascript" src="/customer/webjars/jquery/3.3.1-2/jquery.js"></script>
+<script type="text/javascript" src="/customer/scripts/securityFun.js"></script>
+<style>
+	#main{
+		height:500px;
+		padding-top:20px;
+		background-color:#F5F5F5;
+	}
+	
+	.tip_class{
+		color:red;
+		padding-left:20px;
+	}
+	.lableClass{
+	display: inline-block;
+	width: 110px;
+}
+	.input_div{
+		height:30px;
+		line-height:30px;
+		margin-top:30px;
+	}
+	.input_class{
+		border-radius:5px;
+		background-color:white;
+		width:200px;
+		border:1px solid #CCCCCC;
+		font-size: 16px;
+		color:#666666;
+		font-family:"微软雅黑" ;
+		
+	}
+	.fontClass{
+	color:#666666;
+	font-size: 16px;
+	font-family:"微软雅黑" ;
+}
+	span{
+		cursor:pointer;
+		font-size: 14px;
+		display: inline-block;
+		height:30px;
+		line-height:30px;
+	}
+	.next_btn{
+		border-radius:5px;
+		background-color:#FF7800;
+		width:200px;
+		border:none;
+		color:white;
+		font-size: 16px;
+		font-family:"微软雅黑" ;
+		margin-left:100px;
+		cursor:pointer;
+		margin-top:20px;
+	}
+	#leftNav{
+		width:310px;
+		float:left;
+		margin-left:100px;
+	}
+	.right_content{
+		width:700px;
+		margin-left:450px;
+		border:1px solid #CCCCCC;
+		height:400px;
+		padding-left:30px;
+		background-color:white;
+	}
+		.getCodeOrange{
+		background-color:white;
+		border:1px solid #FF7800;
+		width:130px;
+		color:#FF7800;
+		border-radius:5px;
+		outline:none;
+	}
+	.disable_btn{
+		font-family:"微软雅黑" ;
+		color:#999999;
+		background-color:#F5F5F5;
+		border:1px solid gainsboro;
+		font-size:14px;
+	}
+	#setTransCode,#success{
+		display:none;
+	} 
+	#success{
+		margin-top:30px;
+		font-size:20px;
+		font-weight:bolder;
+		color:#FF7800;
+		padding-left:290px;
+		display:none;
+	}
+</style>
+</head>
+<body>
+	<div th:include="header :: common"></div>
+	<div th:include="header :: nav"></div>
+	
+	<div id="main" >
+			<div id="leftNav">
+				<div th:include="securityNav :: nav"></div>
+			</div>
+			<div class="right_content fontClass" id="checkTransCode">
+				<div class="input_div">
+					<input type="text" class="input_class" value="修改交易密码，需要输入您的原始交易密码" disabled style="color:#CCCCCC;font-size: 16px;border:none;width:330px"/>
+				</div>
+				<div class="input_div">
+					<label class="lableClass">原交易密码</label>
+					<input type="password" class="input_class" id="oldPwd" />
+					<span class="tip_class" id="oldPwdTip" style="color:red"></span>
+				</div>
+				<div class="input_div">
+					<label class="lableClass">短信校验码</label>
+					<input type="text" class="input_class" id="phoneCode" />
+					<input type="button" id="getPhoneCode" class="getCodeOrange" style="width:130px;border-radius:5px;font-size:14px" value="获取校验码"/>
+					<span class="tip_class" id="phoneCodeTip" style="color:red"></span>
+				</div>
+				<div class="input_div">
+					<input type="button" class="next_btn" value="下一步" id="nextStep">
+				</div>
+			</div>
+			
+			<div class="right_content fontClass" id="setTransCode">
+				<div id="setCodeContent">
+					<div class="input_div">
+						<input type="text" class="input_class" value="设置交易密码" disabled style="color:#CCCCCC;font-size: 16px;border:none;width:330px"/>
+					</div>
+					<div class="input_div">
+						<label class="lableClass">设置交易密码</label>
+						<input type="password" class="input_class" id="newPwd" maxlength=8 />
+						<span class="tip_class" id="newPwdTip" style="font-size:12px"></span>
+					</div>
+					<div class="input_div">
+						<label class="lableClass">再次输入密码</label>
+						<input type="password" class="input_class" id="rePwd"/>
+						<span class="tip_class" id = "rePwdTip"></span>
+					</div>
+					<div class="input_div">
+						<input type="button" class="next_btn" value="提交" id="confirm">
+					</div>
+				</div>
+				<div id="success">
+						修改成功
+				</div>
+			</div>
+			
+	
+	</div>
+	<div th:include="footer :: common"></div>
+</body>
+<script type="text/javascript">
+		$(function(){
+			var ifClick = false;
+			$("#alterTransCode").addClass("bg_red");
+			//获取验证码按钮
+			$("#getPhoneCode").click(function(){
+				sendPhoneCode('0','#getPhoneCode','#phoneCodeTip');
+				ifClick = true;
+			})
+			//下一步按钮
+			$("#nextStep").click(function(){
+				$("#oldPwdTip").html("");
+				$("#phoneCodeTip").html("");
+				var oldPwd = $("#oldPwd").val();
+				var phoneCode = $("#phoneCode").val();
+				if (oldPwd == ""){
+					$("#oldPwdTip").html("请输入密码");
+				}else if(ifClick == false){
+					$("#phoneCodeTip").html("点击获取验证码");
+				}else if(phoneCode == "" || phoneCode.trim() == ""){
+					$("#phoneCodeTip").html("请输入验证码");
+				}else{
+					var regIncorrect = /^incorrect/;
+					//不为空则验证密码
+					$.ajax({
+						async : false,
+						url : "/customer/security/checkOldTransCode.do",
+						type : "post",
+						data : {"pwd":oldPwd},
+						success : function(msg){
+							if (msg == "correct"){
+								//密码正确 校验短信验证码
+								verifyPhoneCode("0",phoneCode,"#phoneCodeTip","#checkTransCode","#setTransCode","0");
+								
+							}else if (regIncorrect.test(msg)){
+								//密码不正确,提示剩余次数
+								var infos = msg.split("/");
+								if (infos[1] == '0'){
+									$("#oldPwdTip").html("密码连续输错5次，账号将被锁定3分钟")
+								}else{
+									$("#oldPwdTip").html("密码输入错误，还剩" + infos[1] + "次机会");
+								}
+							}else{
+								$("#oldPwdTip").html("账号已被锁定，" + msg + "分钟后再试");
+							}
+						}
+						
+					});
+				}
+			});
+			//提交按钮
+			$("#confirm").click(function(){
+				updateCode("transCode","#setCodeContent");
+			})
+			
+			
+			
+			
+			
+			
+		})
+		
+	</script>
+</html>
