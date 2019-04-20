@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.fund.mapper.UserAssetMapper">
+  <resultMap id="BaseResultMap" type="com.zl.fund.pojo.UserAsset">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="OPERATION" jdbcType="DECIMAL" property="operation" />
+    <result column="INMONEY" jdbcType="DECIMAL" property="inmoney" />
+    <result column="OUTMONEY" jdbcType="DECIMAL" property="outmoney" />
+    <result column="STATUS" jdbcType="DECIMAL" property="status" />
+    <result column="TRADETIME" jdbcType="TIMESTAMP" property="tradetime" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="AA" jdbcType="VARCHAR" property="aa" />
+    <result column="BB" jdbcType="VARCHAR" property="bb" />
+    <association property="user" column="userid" javaType="com.zl.fund.pojo.User" select="com.zl.fund.mapper.UserMapper.selectByPrimaryKey"></association>
+  </resultMap>
+  <!-- 查询用户银行卡每日充值记录 -->
+  <select id="queryDayRecharge" parameterType="com.zl.fund.pojo.UserIdAndCardid" resultMap="BaseResultMap">
+  	select *
+	  from tb_userasset
+	 where userid = #{userid,jdbcType=DECIMAL}
+	   and aa = #{cardid}
+	   and trunc(tradetime) = trunc(sysdate)
+	   and operation = 1 and status = 1
+  </select>
+  <!-- 查询用户银行卡每日取现记录 -->
+  <select id="queryDayCash" parameterType="com.zl.fund.pojo.UserIdAndCardid" resultMap="BaseResultMap">
+  	select *
+	  from tb_userasset
+	 where userid = #{userid,jdbcType=DECIMAL}
+	   and aa = #{cardid}
+	   and trunc(tradetime) = trunc(sysdate) and (operation = 2 or operation = 3) and status = 1
+  </select>
+  <!--修改交易记录状态（申请成功->成功）  -->
+  <update id="updateStatus" parameterType="java.lang.Integer">
+  	update from TB_USERASSET set status=1 where id=#{id}
+  </update>
+  <insert id="insertUserAsset" parameterType="com.zl.fund.pojo.UserAsset">
+  	insert into TB_USERASSET (ID, USERID, OPERATION, INMONEY, OUTMONEY, STATUS, TRADETIME, REMARK,AA)
+    values (seq_userasset.nextval, #{user.id}, #{operation,jdbcType=DECIMAL}, #{inmoney,jdbcType=DECIMAL}, 
+    #{outmoney}, #{status}, #{tradetime}, #{remark}, #{aa})
+  </insert>
+  <select id="queryByUser" parameterType="com.zl.fund.pojo.Query" resultMap="BaseResultMap">
+  	select ID,OPERATION,INMONEY,OUTMONEY,STATUS,TRADETIME,REMARK from tb_userasset
+  	<where>
+  		userid=#{queryUserId} 
+  		<if test="queryTradeDate!=null and queryTradeDate!=0">
+  			<if test="queryTradeDate==1">
+  				and sysdate-7<![CDATA[<=]]>tradetime
+  			</if>
+  			<if test="queryTradeDate==2">
+  				and sysdate-30<![CDATA[<=]]>tradetime
+  			</if>
+  			<if test="queryTradeDate==3">
+  				and sysdate-90<![CDATA[<=]]>tradetime
+  			</if>
+  		</if>
+  		<if test="queryTradeDateStart!=null">
+  			and tradetime>#{queryTradeDateStart}
+  		</if>
+  		<if test="queryTradeDateEnd!=null">
+  			and tradetime<![CDATA[<]]>#{queryTradeDateEnd}
+  		</if>
+  		<if test="queryTradeType!=null and queryTradeType!=0">
+  			and operation=#{queryTradeType}
+  		</if>
+  		<if test="queryTradeState!=null and queryTradeState!=0">
+  			and status=#{queryTradeState}
+  		</if>
+  	</where>
+  	order by tradetime desc
+  </select>
+</mapper>

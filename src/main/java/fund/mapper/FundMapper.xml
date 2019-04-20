@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.fund.mapper.FundMapper">
+  <resultMap id="fundMap" type="com.zl.fund.pojo.Fund">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="FUNDID" jdbcType="DECIMAL" property="fundid" />
+    <result column="FUNDNAME" jdbcType="VARCHAR" property="fundname" />
+    <result column="ESTABLISHDATE" jdbcType="TIMESTAMP" property="establishdate" />
+    <result column="TOTALSCALE" jdbcType="DECIMAL" property="totalscale" />
+    <result column="FUNDSTATE" jdbcType="DECIMAL" property="fundstate" />
+    <result column="UNITVALUE" jdbcType="DECIMAL" property="unitvalue" />
+    <result column="UNITVALUEDATE" jdbcType="TIMESTAMP" property="unitvaluedate" />
+    <result column="DAYUPDOWN" jdbcType="DECIMAL" property="dayupdown" />
+    <result column="TOTALUPDOWN" jdbcType="DECIMAL" property="totalupdown" />
+    <result column="TRADERATE" jdbcType="DECIMAL" property="traderate" />
+    <result column="MANAGERATE" jdbcType="DECIMAL" property="managerate" />
+    <result column="STARTPOINT" jdbcType="DECIMAL" property="startpoint" />
+    <result column="ADVICE" jdbcType="VARCHAR" property="advice" />
+    <result column="FUNDMANAGER" jdbcType="VARCHAR" property="fundmanager" />
+    <result column="RISKBEARID" jdbcType="VARCHAR" property="riskbearid" />
+    <result column="FUNDGOAL" jdbcType="VARCHAR" property="fundgoal" />
+    <result column="AAA" jdbcType="VARCHAR" property="aaa" />
+    <result column="BBB" jdbcType="VARCHAR" property="bbb" />
+    <result column="CCC" jdbcType="VARCHAR" property="ccc" />
+    <association property="fundtype" column="fundtypeid" javaType="com.zl.fund.pojo.FundType" select="com.zl.fund.mapper.FundTypeMapper.queryFundTypeById"></association>
+    <association property="fundrisk" column="fundriskid" javaType="com.zl.fund.pojo.FundRisk" select="com.zl.fund.mapper.FundRiskMapper.queryFundRiskById"></association>
+  </resultMap>
+  <select id="queryFundById" parameterType="java.lang.Integer" resultMap="fundMap">
+  	select * from tb_fund where id=#{id,jdbcType=DECIMAL}
+  </select>
+  
+  <select id="queryFundByHot" resultMap="fundMap">
+  select * from(select f.*,rownum r from (select *from tb_fund order by totalUpDown) f )  where r 	&lt;=3
+  </select>
+  
+  <select id="queryFundPaging" parameterType="com.zl.fund.pojo.Paging" statementType="CALLABLE">
+		<![CDATA[
+			{call FundTypePaging(
+				#{stratCount,mode=IN,jdbcType=INTEGER},
+				#{endCount,mode=IN,jdbcType=INTEGER},
+				#{fundTypeId,mode=IN,jdbcType=INTEGER},
+				#{totalCount,mode=OUT,jdbcType=INTEGER},
+				#{list,jdbcType=CURSOR,mode=OUT,javaType=ResultSet, resultMap=fundMap}
+			)}
+		]]>
+	</select>
+</mapper>

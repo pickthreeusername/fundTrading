@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.fund.mapper.RiskBearMapper">
+  <resultMap id="BaseResultMap" type="com.zl.fund.pojo.RiskBear">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="BEARLEVEL" jdbcType="DECIMAL" property="bearlevel" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select ID, BEARLEVEL, NAME
+    from TB_RISKBEAR
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+</mapper>

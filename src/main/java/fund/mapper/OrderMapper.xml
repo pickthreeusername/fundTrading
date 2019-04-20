@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.fund.mapper.OrderMapper">
+  
+  <select id="queryOrderList"  parameterType="java.util.Date" resultType="personalFund">
+   	SELECT * FROM personal_fund 
+       WHERE orderdate<![CDATA[<=]]>#{date}-1
+       AND orderdate <![CDATA[>=]]>#{date}-2
+  </select>
+</mapper>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.fund.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.zl.fund.pojo.User">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="USERID" jdbcType="DECIMAL" property="userId" />
+    <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+    <result column="REALNAME" jdbcType="VARCHAR" property="realName" />
+    <result column="MOBILEPHONE" jdbcType="VARCHAR" property="mobilePhone" />
+    <result column="PAD_PAY" jdbcType="DECIMAL" property="padPay" />
+    <result column="IDCARD" jdbcType="VARCHAR" property="idCard" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="EMAIL" jdbcType="VARCHAR" property="email" />
+    <result column="SEX" jdbcType="VARCHAR" property="sex" />
+    <result column="PROFESSION" jdbcType="VARCHAR" property="profession" />
+    <result column="CARDDATE" jdbcType="TIMESTAMP" property="cardDate" />
+    <result column="REGDATE" jdbcType="TIMESTAMP" property="regDate" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="AA" jdbcType="VARCHAR" property="aa" />
+    <result column="BB" jdbcType="VARCHAR" property="bb" />
+    <association property="riskBear" column="riskid" javaType="com.zl.fund.pojo.RiskBear" select="com.zl.fund.mapper.RiskBearMapper.selectByPrimaryKey"></association>
+  </resultMap>
+  <!-- 用户登录 -->
+  <select id="customerLogin" parameterType="com.zl.fund.pojo.User" resultMap="BaseResultMap">
+  	select 
+  		ID, USERID, PASSWORD, REALNAME, MOBILEPHONE, PAD_PAY, IDCARD, ADDRESS, EMAIL, 
+    	RISKID, SEX, PROFESSION, CARDDATE, REGDATE, REMARK, AA, BB
+    from TB_USER
+    where password = #{password} and mobilephone = #{mobilePhone}
+  </select>
+  
+  <!-- 检验号码是否存在 -->
+  <select id="checkPhoneExist" parameterType="java.lang.String" resultType="int">
+  		select count(1) from tb_user where mobilephone = #{phone}
+  </select>
+  
+  <!-- 注册 -->
+  <insert id="userRegister" statementType="CALLABLE" parameterType="User">
+		{call user_register(
+			#{password,mode=IN,jdbcType=VARCHAR},
+			#{mobilePhone,mode=IN,jdbcType=INTEGER}
+		)}
+	</insert>
+  <!-- 修改手机号 -->
+  <update id="updatePhone" parameterType="User">
+  		update tb_user set mobilephone=#{mobilePhone} where id=#{id}
+  </update>
+  
+  <!-- 修改登录密码 -->
+  <update id="updatePassword" parameterType="User">
+  		update tb_user set password=#{password} where id=#{id}
+  </update>
+  
+  <!-- 修改交易密码 -->
+   <update id="updateTransCode" parameterType="User">
+  		update tb_user set PAD_PAY=#{padPay} where id=#{id}
+  </update>
+  
+  <!-- 修改个人详细信息 -->
+  <update id="updateDetailInfo" parameterType="User">
+  		update tb_user set sex=#{sex},PROFESSION = #{profession},ADDRESS = #{address}, CARDDATE = #{cardDate} where id=#{id}
+  </update>
+  
+  <!-- 修改地址 -->
+   <update id="updateAddress" parameterType="User">
+  		update tb_user set ADDRESS = #{address} where id=#{id}
+  </update>
+  <!-- 修改邮箱 -->
+   <update id="updateEmail" parameterType="User">
+  		update tb_user set email = #{email} where id=#{id}
+  </update>
+  <!-- 修改风险等级 -->
+   <update id="updateRisk" parameterType="User">
+  		update tb_user set riskid = #{riskBear.id} where id=#{id}
+  </update>
+  <!-- 查看身份证号是否存在 -->
+  <select id="checkIdCardExist" parameterType="java.lang.String" resultType="int">
+  		SELECT count(1) FROM tb_user WHERE idcard=#{idCard}
+  </select>
+  
+  <!-- 插入身份证号和名字 -->
+   <update id="updateUserIdCard" parameterType="User">
+  		update tb_user set idcard = #{idCard},realname=#{realName} where id=#{id}
+  </update>
+  
+  <select id="selectByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select ID, USERID, PASSWORD, REALNAME, MOBILEPHONE, PAD_PAY, IDCARD, ADDRESS, EMAIL, 
+    RISKID, SEX, PROFESSION, CARDDATE, REGDATE, REMARK, AA, BB
+    from TB_USER
+    where mobilephone = #{mobilephone}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from TB_USER
+    where ID = #{id,jdbcType=DECIMAL}
+  </delete>
+  <insert id="insert" parameterType="com.zl.fund.pojo.User">
+    insert into TB_USER (ID, USERID, PASSWORD, 
+      REALNAME, MOBILEPHONE, PAD_PAY, 
+      IDCARD, ADDRESS, EMAIL, 
+      RISKID, SEX, PROFESSION, 
+      CARDDATE, REGDATE, REMARK, 
+      AA, BB)
+    values (#{id,jdbcType=DECIMAL}, #{userId,jdbcType=DECIMAL}, #{password,jdbcType=VARCHAR}, 
+      #{realName,jdbcType=VARCHAR}, #{mobilePhone,jdbcType=VARCHAR}, #{padPay,jdbcType=DECIMAL}, 
+      #{idCard,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{riskId,jdbcType=DECIMAL}, #{sex,jdbcType=VARCHAR}, #{profession,jdbcType=VARCHAR}, 
+      #{cardDate,jdbcType=TIMESTAMP}, #{regDate,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, 
+      #{aa,jdbcType=VARCHAR}, #{bb,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.zl.fund.pojo.User">
+    update TB_USER
+    set USERID = #{userId,jdbcType=DECIMAL},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      REALNAME = #{realName,jdbcType=VARCHAR},
+      MOBILEPHONE = #{mobilePhone,jdbcType=VARCHAR},
+      PAD_PAY = #{padPay,jdbcType=DECIMAL},
+      IDCARD = #{idCard,jdbcType=VARCHAR},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      EMAIL = #{email,jdbcType=VARCHAR},
+      RISKID = #{riskBear.id,jdbcType=DECIMAL},
+      SEX = #{sex,jdbcType=VARCHAR},
+      PROFESSION = #{profession,jdbcType=VARCHAR},
+      CARDDATE = #{cardDate,jdbcType=TIMESTAMP},
+      REGDATE = #{regDate,jdbcType=TIMESTAMP},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      AA = #{aa,jdbcType=VARCHAR},
+      BB = #{bb,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=DECIMAL}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select ID, USERID, PASSWORD, REALNAME, MOBILEPHONE, PAD_PAY, IDCARD, ADDRESS, EMAIL, 
+    RISKID, SEX, PROFESSION, CARDDATE, REGDATE, REMARK, AA, BB
+    from TB_USER
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ID, USERID, PASSWORD, REALNAME, MOBILEPHONE, PAD_PAY, IDCARD, ADDRESS, EMAIL, 
+    RISKID, SEX, PROFESSION, CARDDATE, REGDATE, REMARK, AA, BB
+    from TB_USER
+  </select>
+</mapper>

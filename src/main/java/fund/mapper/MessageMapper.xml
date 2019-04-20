@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.fund.mapper.MessageMapper">
+  <resultMap id="MessageMap" type="com.zl.fund.pojo.Message">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="MESSAGEDATE" jdbcType="TIMESTAMP" property="messagedate" />
+    <result column="MESSAGECONTENT" jdbcType="VARCHAR" property="messagecontent" />
+    <result column="STATE" jdbcType="DECIMAL" property="state" />
+    <result column="AA" jdbcType="VARCHAR" property="aa" />
+    <association property="user" column="userid" javaType="com.zl.fund.pojo.User" select="com.zl.fund.mapper.UserMapper.selectByPrimaryKey"></association>
+  </resultMap>
+  <select id="queryAllMessageByUserId" parameterType="java.lang.Integer" resultMap="MessageMap">
+  	select * from tb_message where userid=#{userid} and state=1 order by messagedate desc
+  </select>
+  <update id="deleteMessage" parameterType="java.lang.Integer">
+  	update tb_message set state=0 where id=#{id}
+  </update>
+</mapper>

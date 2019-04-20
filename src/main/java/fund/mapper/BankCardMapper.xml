@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.fund.mapper.BankCardMapper">
+  <resultMap id="BaseResultMap" type="com.zl.fund.pojo.BankCard">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="BANKNAME" jdbcType="VARCHAR" property="bankname" />
+    <result column="TIMEQUOTA" jdbcType="DECIMAL" property="timequota" />
+    <result column="DAYQUOTA" jdbcType="DECIMAL" property="dayquota" />
+     <result column="logo" jdbcType="VARCHAR" property="logo" />
+  </resultMap>
+  <select id="queryBankCardAll" resultMap="BaseResultMap">
+     select * from tb_bankcard
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select ID, BANKNAME, TIMEQUOTA, DAYQUOTA,logo
+    from TB_BANKCARD
+    where ID = #{id,jdbcType=DECIMAL}
+  </select>
+  
+</mapper>

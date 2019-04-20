@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.fund.mapper.PersonalInvestMapper">
+  <resultMap id="personalInvestMap" type="com.zl.fund.pojo.PersonalInvest">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="ORDERID" jdbcType="DECIMAL" property="orderid" />
+    <result column="INVESTDATE" jdbcType="TIMESTAMP" property="investdate" />
+    <result column="EACHPAY" jdbcType="DECIMAL" property="eachpay" />
+    <result column="CARDID" jdbcType="VARCHAR" property="cardid" />
+    <result column="WHICHDAY" jdbcType="VARCHAR" property="whichday" />
+    <result column="BB" jdbcType="VARCHAR" property="bb" />
+    <association property="fund" column="fundid" javaType="com.zl.fund.pojo.Fund" select="com.zl.fund.mapper.FundMapper.queryFundById"></association>
+    <association property="user" column="userid" javaType="com.zl.fund.pojo.User" select="com.zl.fund.mapper.UserMapper.selectByPrimaryKey"></association>
+  	<association property="investstate" column="investstate" javaType="com.zl.fund.pojo.InvestState" select="com.zl.fund.mapper.InvestStateMapper.queryInvestStateById"></association>
+  </resultMap>
+  <select id="queryAllInvest" parameterType="java.lang.Integer" resultMap="personalInvestMap">
+  	select * from personal_invest where userid=#{userid,jdbcType=DECIMAL} and investstate!=4
+  </select>
+  <update id="updateBB" parameterType="com.zl.fund.pojo.PersonalInvest">
+  	update personal_invest set bb=#{bb} where id=#{id}
+  </update>
+  <insert id="addPersonalInvest" parameterType="com.zl.fund.pojo.PersonalInvest">
+      insert into personal_invest (ID,orderid,fundid,userId,investdate,eachpay,cardid,investstate,whichday)
+      values (invest_seq.nextval,#{orderid,jdbcType=DECIMAL},#{fund.id,jdbcType=DECIMAL}, 
+      #{user.id,jdbcType=DECIMAL},#{investdate,jdbcType=TIMESTAMP}, #{eachpay,jdbcType=DECIMAL},#{cardid,jdbcType=VARCHAR},
+      #{investstate.id,jdbcType=DECIMAL}, #{whichday,jdbcType=VARCHAR})
+  </insert>
+    <update id="upDataInveststate" parameterType="java.lang.Integer" >
+  		update personal_invest set investstate=4 where orderid=#{orderid,jdbcType=DECIMAL}
+  </update>
+  <select id="queryPIByOrderID" parameterType="java.lang.Integer" resultMap="personalInvestMap">
+        select * from personal_invest where ORDERID=#{orderid,jdbcType=DECIMAL}
+  </select>
+    <select id="getAllInvest" resultMap="personalInvestMap">
+        select * from personal_invest 
+  </select>
+</mapper>

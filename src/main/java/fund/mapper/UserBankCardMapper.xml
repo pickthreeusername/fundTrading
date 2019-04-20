@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.fund.mapper.UserBankCardMapper">
+  <resultMap id="BaseResultMap" type="com.zl.fund.pojo.UserBankCard">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="USERID" jdbcType="DECIMAL" property="userid" />
+    <result column="CARDID" jdbcType="VARCHAR" property="cardid" />
+    <result column="BANK_DEPOSIT" jdbcType="VARCHAR" property="bankDeposit" />
+    <result column="TEL" jdbcType="VARCHAR" property="tel" />
+    <result column="STATE" jdbcType="DECIMAL" property="state" />
+    <result column="BALANCES" jdbcType="VARCHAR" property="balances" />
+    <result column="BB" jdbcType="VARCHAR" property="bb" />
+    <association property="user" column="userid" javaType="com.zl.fund.pojo.User" select="com.zl.fund.mapper.UserMapper.selectByPrimaryKey"></association>
+    <association property="bankCard" column="bankcardid" javaType="com.zl.fund.pojo.BankCard" select="com.zl.fund.mapper.BankCardMapper.selectByPrimaryKey"></association>
+  </resultMap>
+  
+  <insert id="insert" parameterType="com.zl.fund.pojo.UserBankCard">
+    insert into TB_USERBANKCARD (ID, USERID, BANKCARDID, 
+      CARDID, BANK_DEPOSIT, TEL, 
+      STATE, balances, BB)
+      values (card_seq.nextVal, #{userid,jdbcType=DECIMAL}, #{bankCard.id,jdbcType=DECIMAL}, 
+      #{cardid,jdbcType=VARCHAR}, #{bankDeposit,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, 
+      1, #{balances,jdbcType=VARCHAR}, #{bb,jdbcType=VARCHAR})
+  </insert>
+  
+   <!--删除银行卡  -->
+  <update id="delCard" parameterType="java.lang.Integer">
+    update TB_USERBANKCARD set state=0 where id=#{id}
+  </update>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    select ID, USERID, BANKCARDID, CARDID, BANK_DEPOSIT, TEL, STATE, AA, BB
+    from TB_USERBANKCARD
+  </select>
+  
+  <!-- 查询用户银行卡信息 -->
+  <select id="queryByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select ID, USERID, BANKCARDID, CARDID, BANK_DEPOSIT, TEL, STATE, balances
+    from TB_USERBANKCARD where USERID=#{userid,jdbcType=DECIMAL} and state=1
+  </select>
+
+  <!-- 通过 userid and 银行卡号 查 -->
+  <select id="queryByTwoId" parameterType="com.zl.fund.pojo.UserIdAndCardid" resultMap="BaseResultMap">
+      select ID, USERID, BANKCARDID, CARDID, BANK_DEPOSIT, TEL, STATE, balances
+    from TB_USERBANKCARD where USERID=#{userid,jdbcType=DECIMAL} AND cardid=#{cardid}
+  </select>
+  
+  <update id="updateBalances" parameterType="com.zl.fund.pojo.UserBankCard">
+    update TB_USERBANKCARD set balances=#{balances} where cardid=#{cardid}
+  </update>
+  
+  <!--通过id查询银行卡号  -->
+  <select id="findCardidById" parameterType="java.lang.Integer" resultType="java.lang.String">
+    select cardid from TB_USERBANKCARD where id=#{id}
+  </select>
+  
+  <select id="findCount" parameterType="java.lang.String" resultType="int">
+   select count(1) from TB_USERBANKCARD where cardid = #{cardid} and state=1
+  </select>
+  
+</mapper>

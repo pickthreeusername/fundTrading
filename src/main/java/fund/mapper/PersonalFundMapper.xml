@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zl.fund.mapper.PersonalFundMapper">
+  <resultMap id="personalFundMap" type="com.zl.fund.pojo.PersonalFund">
+    <id column="ID" jdbcType="DECIMAL" property="id" />
+    <result column="ORDERID" jdbcType="DECIMAL" property="orderid" />
+    <result column="PORTION" jdbcType="DECIMAL" property="portion" />
+    <result column="CARDID" jdbcType="VARCHAR" property="cardid" />
+    <result column="orderdate" jdbcType="TIMESTAMP" property="orderdate" />
+    <result column="BB" jdbcType="VARCHAR" property="bb" />
+    <association property="fund" column="fundid" javaType="com.zl.fund.pojo.Fund" select="com.zl.fund.mapper.FundMapper.queryFundById"></association>
+    <association property="user" column="userid" javaType="com.zl.fund.pojo.User" select="com.zl.fund.mapper.UserMapper.selectByPrimaryKey"></association>
+  	<association property="tradetype" column="fundtype" javaType="com.zl.fund.pojo.TradeType" select="com.zl.fund.mapper.TradeTypeMapper.queryTradeTypeById"></association>
+  	<association property="tradestate" column="fundstate" javaType="com.zl.fund.pojo.TradeState" select="com.zl.fund.mapper.TradeStateMapper.queryTradeStateById"></association>
+  </resultMap>
+  <select id="queryFundByUser" parameterType="java.lang.Integer" resultMap="personalFundMap">
+  	SELECT * FROM (SELECT * FROM personal_fund WHERE fundtype=1 AND fundstate=1 UNION ALL SELECT * FROM personal_fund WHERE fundtype=3 AND fundstate=1 UNION ALL SELECT * FROM personal_fund WHERE fundtype=2 AND fundstate=3 UNION ALL SELECT * FROM personal_fund WHERE fundtype=2 AND fundstate=2) WHERE userid=#{userid,jdbcType=DECIMAL}
+  </select>
+  <!-- 查询用户在途资金 -->
+  <select id="queryOnwayFundByUser" parameterType="java.lang.Integer" resultMap="personalFundMap">
+  	SELECT *
+	  FROM (SELECT *
+	        FROM personal_fund WHERE fundtype = 1 AND fundstate = 4
+	        UNION ALL
+	        SELECT * FROM personal_fund WHERE fundtype = 2 AND fundstate = 4)
+	  WHERE userid = #{userid,jdbcType=DECIMAL} order by orderdate desc
+  </select>
+  <select id="queryAllFundRecord" parameterType="com.zl.fund.pojo.Query" resultMap="personalFundMap">
+  	select * from personal_fund
+  	<where>
+  		and userid=#{queryUserId}
+  		<if test="queryTradeDate!=null and queryTradeDate!=0">
+  			<if test="queryTradeDate==1">
+  				and sysdate-7<![CDATA[<=]]>orderdate
+  			</if>
+  			<if test="queryTradeDate==2">
+  				and sysdate-30<![CDATA[<=]]>orderdate
+  			</if>
+  			<if test="queryTradeDate==3">
+  				and sysdate-90<![CDATA[<=]]>orderdate
+  			</if>
+  		</if>
+  		<if test="queryTradeDateStart!=null">
+  			and orderdate>#{queryTradeDateStart}
+  		</if>
+  		<if test="queryTradeDateEnd!=null">
+  			and orderdate<![CDATA[<]]>#{queryTradeDateEnd}
+  		</if>
+  		<if test="queryTradeType!=null and queryTradeType!=0">
+  			and fundtype=#{queryTradeType}
+  		</if>
+  		<if test="queryTradeState!=null and queryTradeState!=0">
+  			and fundstate=#{queryTradeState}
+  		</if>
+  	</where>
+  	order by orderdate desc
+  </select>
+  <insert id="addPersonalFund" parameterType="com.zl.fund.pojo.PersonalFund">
+         insert into personal_fund (ID, orderid, fundid, 
+      userId, portion, cardid, 
+      fundtype, fundState,
+      orderdate)
+    values (person_fund_seq.nextval, #{orderid,jdbcType=DECIMAL}, #{fund.id,jdbcType=DECIMAL}, 
+      #{user.id,jdbcType=DECIMAL}, #{portion,jdbcType=DECIMAL}, #{cardid,jdbcType=VARCHAR}, 
+      #{tradetype.id,jdbcType=DECIMAL}, #{tradestate.id,jdbcType=DECIMAL}, #{orderdate,jdbcType=TIMESTAMP})
+  </insert>
+  
+  <select id="queryFundRecord" parameterType="java.lang.Integer" resultMap="personalFundMap">
+      select * from personal_fund where orderid=#{orderid,jdbcType=DECIMAL}
+  </select>
+  
+  <!--查询用户的基金交易  -->
+  <select id="findRecords" resultType="int">
+   select count(1) from personal_fund where userid=#{param1} and cardid=#{param2}
+  </select>
+  
+  <!-- 修改用户银行卡绑定 -->
+  <update id="updateCardid">
+    update personal_fund set cardid =#{param1} where userid=#{param2} and cardid=#{param3}
+  </update>
+
+  <update id="upDateType" parameterType="java.lang.Integer" >
+  		update personal_fund set fundtype=2,fundstate=4 where orderid=#{orderid,jdbcType=DECIMAL}
+  </update>
+  
+  <!--查询银行卡关联资产 -->
+  <select id="findCardValue" resultType="com.zl.fund.pojo.Card">
+    select userid,cardid, portion, p.fundid "fundid", unitvalue from personal_fund p, tb_fund t 
+    where p.fundid = t.id
+    and p.fundtype =1 and p.fundstate=1
+    and p.userid=#{param1}
+    and p.cardid = #{param2}
+  </select>
+  <!-- 撤单 -->
+  <update id="cencelTrade" parameterType="java.lang.Integer">
+  	update personal_fund set fundstate=2 where id=#{id}
+  </update>
+  <select id="queryPersonalFundById" parameterType="java.lang.Integer" resultMap="personalFundMap">
+  	select * from personal_fund where id=#{id}
+  </select>
+</mapper>
